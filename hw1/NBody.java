@@ -67,4 +67,5 @@ public class NBody{
 		Planet p = new Planet(x,y,xVelocity,yVelocity,mass,img);
 		return p;
 	}
+
 }
