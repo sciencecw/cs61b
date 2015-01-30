@@ -79,7 +79,7 @@ public class IntList {
 
   /** Returns a list consisting of the elements of A followed by the
    ** elements of B.  May NOT modify items of A.  Use 'new'. */
-  public static IntList catenate(IntList A, IntList B) {
+  /** public static IntList catenate(IntList A, IntList B) {
     //TODO:  fill in method
     if (A==null){
       return B;
@@ -98,17 +98,27 @@ public class IntList {
        B=B.tail;
     }
     return C;
+  } */
+
+  public static IntList catenate(IntList A, IntList B) {
+    // Recursive
+    if (A==null){
+      return B;
+    } else {
+      return new IntList(A.head,catenate(A.tail,B));
+    }
   }
 
 
   public static IntList dcatenate(IntList A, IntList B){
+    // Recursive
      if (A==null){
         return B;
      } // weird because A is actually null
      if (A.tail == null){
         A.tail = B;
      }else{
-     dcatenate(A.tail,B);
+        dcatenate(A.tail,B);
      }
      return A;
    }

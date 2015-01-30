@@ -60,22 +60,37 @@ public class IntListTest {
       IntList.dcatenate(L3,L4);
       assertEquals(IntList.list(1, 2, 3), L3);
       assertEquals(null, L4);
+      //test 3
+      IntList L5 = IntList.list();
+      IntList L6 = IntList.list(4, 3, 1);
+      IntList.dcatenate(L5,L6);
+      assertEquals(null, L5);
+      assertEquals(IntList.list(4, 3, 1), L6);
     }
 
     @Test
     public void testCatenate() {
+      // test 1
       IntList L1 = IntList.list(1, 2, 3);
       IntList L2 = IntList.list(6, 5, 4);
-      IntList Lcat = IntList.catenate(L1,L2);
+      IntList lcat = IntList.catenate(L1,L2);
       assertEquals(IntList.list(1, 2, 3), L1);
       assertEquals(IntList.list(6, 5, 4), L2);
-      assertEquals(IntList.list(1, 2, 3, 6, 5, 4), Lcat);
+      assertEquals(IntList.list(1, 2, 3, 6, 5, 4), lcat);
       // test 2
       IntList L3 = IntList.list(1, 2, 3);
       IntList L4 = null;
-      IntList.catenate(L3,L4);
+      IntList lcat2 = IntList.catenate(L3,L4);
       assertEquals(IntList.list(1, 2, 3), L3);
       assertEquals(null, L4);
+      assertEquals(IntList.list(1,2,3),lcat2);
+      // test 3
+      IntList L5 = null;
+      IntList L6 = IntList.list(1, 2, 1);
+      IntList lcat3 = IntList.catenate(L5,L6);
+      assertEquals(null, L5);
+      assertEquals(IntList.list(1, 2, 1), L6);
+      assertEquals(IntList.list(1, 2, 1),lcat3);
     }
 
 
