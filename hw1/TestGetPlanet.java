@@ -52,7 +52,6 @@ public class TestGetPlanet {
         in.readDouble();
 
         Planet p = NBody.getPlanet(in);
-
         checkEquals(p.x, 1.496e11, "x");
         checkEquals(p.y, 0.0, "y");
         checkEquals(p.xVelocity, 0.0, "xVelocity");
