@@ -17,7 +17,7 @@ public class Triangle {
   public String triangleType() {
 
     // Chceck that nothing is negative
-    if (s1 <= 0 || s2 <= 0 || s3 <= 0) {
+    if (s1 < 0 || s2 < 0 || s3 < 0) {
       return "At least one length is less than 0!";
     }
 
@@ -28,6 +28,14 @@ public class Triangle {
 
     // Return triangle type
     //TODO:  return either "Equilateral", "Isosceles", or "Scalene"
-    return null; //REPLACE THIS LINE
+    if ((s1==s2)&& (s2==s3) && (s3==s1)){
+       return "Equilateral";
+    }
+
+    if ((s1==s2) || (s2==s3) || (s3==s1)){
+       return "Isosceles";
+    }
+
+    return "Scalene"; //REPLACE THIS LINE
   }
 }

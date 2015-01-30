@@ -8,7 +8,20 @@ public class Year {
      *          false if year is not a leap year
      */
     static boolean isLeapYear(int year) {
-        return true;    // YOUR CODE HERE
+    	if (year%400 == 0) {
+    		return true;
+        }else{
+        if (year%4 ==0){
+        	if (year%100 !=0){
+        		return true;
+        	}else {
+        		return false;
+        	}
+        }else{
+        	return false;
+        }
+        }
+    	    // YOUR CODE HERE
     }
 
     /** Calls isLeapYear to print correct statement.
