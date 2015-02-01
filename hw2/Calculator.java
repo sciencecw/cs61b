@@ -103,6 +103,10 @@ public class Calculator {
     **/
     public void undoEquation() {
         // YOUR CODE HERE
+       if (eqhist == null){
+         return;
+       }	
+       eqhist=eqhist.next;    
     }
 
     /**
@@ -111,6 +115,9 @@ public class Calculator {
      **/
     public void clearHistory() {
         // YOUR CODE HERE
+	while (eqhist != null){
+	  undoEquation();
+	}
     }
 
     /**
@@ -121,7 +128,13 @@ public class Calculator {
      **/
     public int cumulativeSum() {
         // YOUR CODE HERE
-        return -1;
+	EquationList eqi =eqhist;
+	int sum = 0;
+	while (eqi != null){
+	  sum=add(sum,eqi.result);
+	  eqi = eqi.next;
+	}
+        return sum;
     }
 
     /**
@@ -132,6 +145,16 @@ public class Calculator {
      **/
     public int cumulativeProduct() {
         // YOUR CODE HERE
-        return -1;
+	EquationList eqi =eqhist;
+	int product = 1;
+	while (eqi != null){
+	  product = multiply(product,eqi.result);
+	  eqi=eqi.next;
+	}
+        return product;
     }
 }
+
+
+
+
