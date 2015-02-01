@@ -2,6 +2,7 @@ import list.EquationList;
 
 public class Calculator {
     // YOU MAY WISH TO ADD SOME FIELDS
+    EquationList eqhist= null;
 
     /**
      * TASK 2: ADDING WITH BIT OPERATIONS
@@ -13,7 +14,12 @@ public class Calculator {
      **/
     public int add(int x, int y) {
         // YOUR CODE HERE
-        return -1;
+	if (y == 0){
+	  return x;
+	}else if (x == 0){
+	  return y;
+	}
+        return add((x^y),(x&y)<<1);
     }
 
     /**
@@ -26,7 +32,24 @@ public class Calculator {
      **/
     public int multiply(int x, int y) {
         // YOUR CODE HERE
-        return -1;
+        return multiply(x,y,1);
+    }
+
+    private int multiply(int x, int y, int exp){
+       if (x==0 || y==0){
+         return 0;
+       }
+       if ((x & exp)!=0){
+         int prod = y;
+	 int expi = exp;
+	 x=x^exp;
+	 while (expi!=1){
+	   expi=expi>>>1;
+	   prod=prod<<1;
+	 }
+	 return add(multiply(x,y,exp<<1),prod);
+       }
+       return multiply(x,y,exp<<1);
     }
 
     /**
@@ -40,6 +63,7 @@ public class Calculator {
      **/
     public void saveEquation(String equation, int result) {
         // YOUR CODE HERE
+	eqhist = new EquationList(equation, result, eqhist);
     }
 
     /**
@@ -51,6 +75,7 @@ public class Calculator {
      **/
     public void printAllHistory() {
         // YOUR CODE HERE
+	printHistory(-1);
     }
 
     /**
@@ -61,7 +86,15 @@ public class Calculator {
      * Ex   "1 + 2 = 3"
      **/
     public void printHistory(int n) {
-        // YOUR CODE HERE
+        EquationList eqi = eqhist;
+	for (int i = 0; i!=n;i++){
+	  if (eqi != null){
+	    System.out.println(eqi.equation+" = "+eqi.result);
+	    eqi = eqi.next;
+	  }else {
+	  return;
+	  }
+	}
     }    
 
     /**
