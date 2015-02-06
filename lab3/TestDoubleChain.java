@@ -27,10 +27,16 @@ public class TestDoubleChain {
         d.insertFront(1);
         d.insertBack(7);
         d.insertBack(8);
+	System.out.println(d.toString());
+	System.out.println(d.getBack().val);
+	
         assertEquals(1, d.getFront().val, 1e-11);
         assertEquals(8, d.getBack().val, 1e-11);
+	//d.delete:1
     }
 
+    //@Test
+    //public void test
     public static void main(String[] args) {
         jh61b.junit.textui.runClasses(TestDoubleChain.class);
     }
