@@ -44,9 +44,13 @@ public class DoubleChain {
 	  * This is an extra challenge problem. */
 	public DNode deleteBack() {
 		/* your code here */
+		if (head == null){
+			return null;
+		}
 		DNode pointer = getBack();
 		DNode temp = pointer;
-		pointer.prev.next = null; // TODO CHECK THIS 
+		pointer = pointer.prev;
+		pointer.next = null; // TODO CHECK THIS 
 		return temp;
 	}
 	
@@ -61,14 +65,15 @@ public class DoubleChain {
 			pointer = pointer.next;
 		}
 		return rep; */
-		return toString(head);
+		return "["+toString(head)+"]";
 	}
 	
+	//Helper method
 	private String toString(DNode pointer){
-		if (pointer == null){
-			return "";
+		if (pointer.next == null){
+			return pointer.val+"";
 		}
-		String rep = "->[" + pointer.val+ "]"+toString(pointer.next);
+		String rep = pointer.val+ ","+toString(pointer.next);
 		return rep;
 		
 	}

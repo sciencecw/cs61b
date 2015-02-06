@@ -32,7 +32,10 @@ public class TestDoubleChain {
 	
         assertEquals(1, d.getFront().val, 1e-11);
         assertEquals(8, d.getBack().val, 1e-11);
-	//d.delete:1
+	d.deleteBack();
+	
+        assertEquals(7, d.getBack().val, 1e-11);
+	System.out.println(d.toString());
     }
 
     //@Test
