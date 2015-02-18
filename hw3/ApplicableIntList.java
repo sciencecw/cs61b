@@ -4,7 +4,7 @@ import java.util.Formatter;
  * ApplicableIntList.java
  * A list that stores integers in ascending order.
  */
-public class ApplicableIntList{
+public class ApplicableIntList {
     /** First element of list. */
     public int head;
     /** Remaining elements of list. */
@@ -12,29 +12,62 @@ public class ApplicableIntList{
 
     /** A list with head HEAD0 and tail TAIL0. */
     public ApplicableIntList(int head0, ApplicableIntList tail0) {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        head = head0;
+        tail = tail0;
     }
 
     /** A list with null tail, and head = 0. */
     public ApplicableIntList() {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        this(0, null);
     }
 
     /** Inserts int i into its correct location, doesn't handle cycles. */
     public void insert(int i) {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        if (i < head) {
+            // edge case: inserting to front of list
+            tail = new ApplicableIntList(head, tail);
+            head = i;
+        }
+        else {
+            // inserting into middle or end of list
+            ApplicableIntList curr = this;
+            while (curr.tail != null && i > curr.tail.head) {
+                curr = curr.tail;
+            }
+            curr.tail = new ApplicableIntList(i, curr.tail);
+        }
     }
 
     /** Returns the i-th int in this list.
      *  The first element, which is in location 0, is the 0th element.
      *  Assume i takes on the values [0, length of list - 1]. */
     public int get(int i) {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        ApplicableIntList curr = this;
+        while (curr.tail != null && i != 0) {
+            curr = curr.tail;
+            i--;
+        }
+        return curr.head;
     }
 
     /** Applies the function f to every item in this list. */
     public void apply(IntUnaryFunction f) {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        ApplicableIntList curr = this;
+        //applying function
+        while (curr != null) {
+            curr.head = f.apply(curr.head);
+            curr = curr.tail;
+        }
+        //reordering list
+        ApplicableIntList newList = new ApplicableIntList(get(0), null);
+        curr = this.tail;
+        while (curr != null) {
+            newList.insert(curr.head);
+            curr = curr.tail;
+        }
+        //update pointers
+        head = newList.head;
+        tail = newList.tail;
     }
 
     /** Returns NULL if no cycle exists, else returns cycle location. */

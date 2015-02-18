@@ -12,29 +12,60 @@ public class SortedComparableList {
 
     /** A list with head HEAD0 and tail TAIL0. */
     public SortedComparableList(Comparable head0, SortedComparableList tail0) {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        head = head0;
+        tail = tail0;
     }
 
     /** A list with null tail, and head = 0. */
     public SortedComparableList(){
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        this(0, null);
     }
 
     /** Inserts Comparable c into its correct location in this list. */
     public void insert(Comparable c) {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        if (c != null) {
+            // null check
+            if (c.compareTo(head) < 0) {
+                // edge case: inserting to front of list
+                tail = new SortedComparableList(head, tail);
+                head = c;
+            }
+            else {
+                // inserting into middle or end of list
+                SortedComparableList curr = this;
+                while (curr.tail != null && c.compareTo(curr.tail.head) > 0) {
+                    curr = curr.tail;
+                }
+                curr.tail = new SortedComparableList(c, curr.tail);
+            }
+        }
     }
 
     /** Returns the i-th int in this list.
      *  The first element, which is in location 0, is the 0th element.
      *  Assume i takes on the values [0, length of list - 1]. */
     public Comparable get(int i) {
-        return null; // REPLACE THIS LINE WITH YOUR SOLUTION
+        if (head == null || i == 0) {
+            //edge cases
+            return head;
+        }
+        else {
+            SortedComparableList curr = this;
+            while (curr.tail != null && i != 0) {
+                curr = curr.tail;
+                i--;
+            }
+            return curr.head;
+        }
     }
 
     /** Adds every item in THAT to this list. */
     public void extend(SortedComparableList that) {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        SortedComparableList curr = that;
+        while (curr != null) {
+            insert(curr.head);
+            curr = curr.tail;
+        }
     }
 
     /** Returns a list consisting of the elements of L starting from
@@ -43,7 +74,12 @@ public class SortedComparableList {
       *
       * This method should NOT modify L. */
     public static SortedComparableList subTail(SortedComparableList L, int start) {
-        return null; // REPLACE THIS LINE WITH YOUR SOLUTION
+        if (L == null || start == 0) {
+            return L;
+        }
+        else {
+            return subTail(L.tail, start-1);
+        }
     }
 
     /** Returns the sublist consisting of LEN items from list L,
@@ -53,12 +89,26 @@ public class SortedComparableList {
      *  Assume START and END are >= 0.
      */
     public static SortedComparableList sublist(SortedComparableList L, int start, int len) {
-        return null; // REPLACE THIS LINE WITH YOUR SOLUTION
+        if (len == 0) {
+            //base case
+            return null;
+        }
+        else if (start > 0) {
+            return sublist(L.tail, start - 1, len);
+        }
+        return new SortedComparableList(L.head, sublist(L.tail, 0, len - 1));
     }
 
     /** Removes items from L at position len+1 and later. */
     public static void expungeTail(SortedComparableList L, int len) {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        if (L == null) {
+            return;
+        }
+        else if (len == 0) {
+            L.tail = null;
+            return;
+        }
+        expungeTail(L.tail, len - 1);
     }
 
     /**
@@ -67,31 +117,42 @@ public class SortedComparableList {
      *  remains. No two consecutive items in this list are equals at the
      *  end of this method.
      *
-     *  You can assume the list is in sorted order when this method is
-     *  called.
-     *
-     *  For example, if the input list is [ 0 0 0 0 1 1 3 3 3 4 ], the
-     *  output list is [ 0 1 3 4 ].
+     *  For example, if the input list is [ 0 0 0 0 1 1 0 0 0 3 3 3 1 1 0 ], the
+     *  output list is [ 0 1 0 3 1 0 ].
      **/
     public void squish() {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        if (tail != null) {
+            SortedComparableList prev = this;
+            SortedComparableList curr = tail;
+            while (curr != null) {
+                if (prev.head.equals(curr.head)) {
+                    prev.tail = curr.tail;
+                    curr = prev.tail;
+                }
+                else {
+                    prev = prev.tail;
+                    curr = prev.tail;
+                }
+            }
+        }
     }
 
     /** Duplicates each Comparable so that for every original
      *  Comparable, there will end up being two consecutive Comparables.
      *
-     *  You can assume the list is in sorted order when this method is
-     *  called.
-     *
-     *  For example, if the input list is [ 2 3 4 7 ], the
-     *  output list is [ 2 2 3 3 4 4 7 7 ].
+     *  For example, if the input list is [ 3 7 4 2 2 ], the
+     *  output list is [ 3 3 7 7 4 4 2 2 2 2].
      *
      *  NOTE: Do not try to make copies of the Comparables. Set
      *  the HEAD variable equal to the HEAD variable you are trying to
      *  duplicate.
      **/
     public void twin() {
-        // REPLACE THIS LINE WITH YOUR SOLUTION
+        SortedComparableList prev = this;
+        while (prev != null) {
+            prev.tail = new SortedComparableList(prev.head, prev.tail);
+            prev = prev.tail.tail;
+        }
     }
 
     /** Returns NULL if no cycle exists, else returns cycle location. */
@@ -123,6 +184,7 @@ public class SortedComparableList {
     /** Returns true iff X is a SortedComparableList containing the
      *  same sequence of Comparables as THIS. Cannot handle cycles. */
     public boolean equals(Object x) {
+        //make them do this
         if (!(x instanceof SortedComparableList)) {
             return false;
         }
@@ -159,4 +221,6 @@ public class SortedComparableList {
         out.format(")");
         return out.toString();
     }
+
+
 }
