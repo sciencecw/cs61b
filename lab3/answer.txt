@@ -1,0 +1,1 @@
+When "int"s of value 128 are put into the parameters of isSameNumber method, it is converted into Integer objects, which, although contain the same value, are two distinct objects.  
