@@ -14,8 +14,8 @@ import static org.junit.Assert.*;
 public class TestGuitarString {
     @Test
     public void testPluckTheAString() {
-        //double CONCERT_A = 440.0;
-        double CONCERT_A = 880.0;
+        double CONCERT_A = 440.0;
+        //double CONCERT_A = 880.0;
         GuitarString aString = new GuitarString(CONCERT_A);
         aString.pluck();
         for (int i = 0; i < 50000; i += 1) {

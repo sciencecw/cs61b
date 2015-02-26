@@ -47,7 +47,7 @@ public class ArrayRingBuffer extends AbstractBoundedQueue {
   public double dequeue() {
     // TODO: Dequeue the first item. Don't forget to decrease fillCount and update first.
     if (isEmpty()){
-      throw new RuntimeException("Ring buffer overflow");
+      throw new RuntimeException("Ring buffer underflow");
     }
     double temp;
     temp = rb[first];
@@ -62,7 +62,7 @@ public class ArrayRingBuffer extends AbstractBoundedQueue {
   /** Return oldest item, but don't remove it. */
   public double peek() {
     if (isEmpty()){
-      throw new RuntimeException("Ring buffer overflow");
+      throw new RuntimeException("Ring buffer underflow");
     }
     return rb[first];
     // TODO: Return the first item. None of your instance variables should change.
