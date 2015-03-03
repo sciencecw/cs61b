@@ -1,3 +1,4 @@
+package demos;
 import ngordnet.WordNet;
 
 /** Class that demonstrates basic WordNet functionality.
@@ -27,7 +28,7 @@ public class WordNetDemo {
             demotion
             jump
         */
-
+        System.out.println(" ");
         System.out.println("All nouns:");
         for (String noun : wn.nouns()) {
             System.out.println(noun);
@@ -40,7 +41,7 @@ public class WordNetDemo {
             leap
             jump
         */
-
+        System.out.println(" ");
         System.out.println("Hypnoyms of increase:");
         for (String noun : wn.hyponyms("increase")) {
             System.out.println(noun);
@@ -52,7 +53,7 @@ public class WordNetDemo {
             leap
             jump
         */
-
+        System.out.println(" ");
         System.out.println("Hypnoyms of jump:");
         for (String noun : wn.hyponyms("jump")) {
             System.out.println(noun);
@@ -71,7 +72,7 @@ public class WordNetDemo {
             leap
             jump        
         */
-
+        System.out.println(" ");
         /** From: http://goo.gl/EGLoys */
         System.out.println("Hypnoyms of change:");
 
