@@ -44,7 +44,7 @@ public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {
       TimeSeries<Double> temp = new TimeSeries<Double>();
       for (Integer i:this.navigableKeySet()){
         if (ts.containsKey(i) && this.containsKey(i)){
-          Double quotient = ((Double) this.get(i))/((Double)ts.get(i));
+          Double quotient =  (this.get(i).doubleValue()/ts.get(i).doubleValue());
           temp.put(i,quotient);
         }else{
           throw new IllegalArgumentException();
@@ -57,13 +57,17 @@ public class TimeSeries<T extends Number> extends TreeMap<Integer, T> {
       * a Double time series (for simplicity). */
     public TimeSeries<Double> plus(TimeSeries<? extends Number> ts){
       TimeSeries<Double> temp = new TimeSeries<Double>();
-      for (Integer i:this.navigableKeySet()){
-        if (ts.containsKey(i) && this.containsKey(i)){
-          Double sum = ((Double) this.get(i))+((Double)ts.get(i));
-          temp.put(i,sum);
-        }else{
-          throw new IllegalArgumentException();
+      Set<Integer> iterYear = this.keySet();
+      iterYear.addAll(ts.keySet());
+      for (Integer i:iterYear){
+        Double sum = 0.;
+        if (ts.containsKey(i)){
+          sum += ts.get(i).doubleValue(); 
         }
+        if (this.containsKey(i)){
+          sum += this.get(i).doubleValue(); 
+        }
+        temp.put(i,sum);
       }
       return temp;
 
