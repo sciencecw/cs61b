@@ -39,7 +39,7 @@ Similarly, time permitting, we will be allocating a small portion of your grade 
 
 **While reading this spec, don't start coding until we tell you to. If you jump in early, you're likely to go down the wrong path. The spec and supporting files should be your first source of information and you should consult this document before seeking outside help.**
 
-
+3/5/2015: The only restriction on the libraries you use is that it runs on the autograder. You should not assume that we have Guava or Apache Commons or similar installed. It is OK to include .java files from these libraries, provided that you cite your sources.
 
 1: The WordNet Class
 =====
@@ -69,9 +69,9 @@ A small subgraph of the WordNet Digraph is illustrated below. In our copy of the
 
 ![WordNet](wordnet-fig2.png "WordNet")
 
-A graph consists of a set of V vertices and E edges (represented by arrows in the above figure) between vertices. For example, in the graph above, V = 23 and E = 23. One of these edegs is from "increase" to "jump leap", indicating that the synset "increase" is a hypernym of "jump leap". 
+A graph consists of a set of V vertices and E edges (represented by arrows in the above figure) between vertices. For example, in the graph above, V = 23 and E = 23. One of these edges is from "increase" to "jump leap", indicating that the synset "increase" is a hypernym of "jump leap". 
 
-Your first task in this assignment is to read in the provided synset and hypernym datafiles (see further down on this page for the structure of the synset and hypernym files). To represent the arrows, we'll be using a class from the ```edu.princeton.cs.algs4``` package called Digraph (which you can import with ```edu.princeton.cs.algs4.Digraph```. You can think of this class as having only a constructor and an addEdge method (it actually has more, but you won't be using them directly, as you'll instead be relying on a provided GraphHelper class, described further below):
+Your first task in this assignment is to read in the provided synset and hyponym datafiles (see further down on this page for the structure of the synset and hyponym files). To represent the arrows, we'll be using a class from the ```edu.princeton.cs.algs4``` package called Digraph (which you can import with ```edu.princeton.cs.algs4.Digraph```. You can think of this class as having only a constructor and an addEdge method (it actually has more, but you won't be using them directly, as you'll instead be relying on a provided GraphHelper class, described further below):
 
     public class Digraph() {
         /** Creates a new Digraph with V vertices. */
@@ -90,7 +90,7 @@ Note that the Digraph class requires us to know the number of vertices in advanc
 
 This might seem like an annoying limitation of our Digraph class. However, even if the Digraph class allowed such convenient syntax, it wouldn't work for WordNet, because there can be multiple Synsets that have the exact same String. For example there are two synsets represented by exactly the String ["American"](http://wordnetweb.princeton.edu/perl/webwn?s=American&sub=Search+WordNet&o2=&o0=1&o8=1&o1=1&o7=&o5=&o9=&o6=&o3=&o4=&h=0), each with their own hypernyms. 
 
-To avoid this ambiguity, the synsets and hypernyms files have a special structure, described in the next section.
+To avoid this ambiguity, the synsets and hyponyms files have a special structure, described in the next section.
 
 The WordNet input file formats.
 ------
@@ -102,7 +102,7 @@ We now describe the two data files that you will use to create the wordnet digra
 
     means that the synset ```{ AND_circuit, AND_gate }``` has an id number of 36 and its definition is "a circuit in a computer that fires only when all of its inputs fire". The individual nouns that comprise a synset are separated by spaces (and a synset element is not permitted to contain a space). The S synset ids are numbered 0 through S − 1; the id numbers will appear consecutively in the synset file. You will not (officially) use the definitions in this project, though you're welcome to create public subclasses of WordNet that do use them in some interesting way.
 
-  - List of hyponyms. The file hyponyms.txt (and other smaller files with hypernym in the name) contains the hyponym relationships: The first field is a synset id; subsequent fields are the id numbers of the synset's direct hyponyms. For example, the following line
+  - List of hyponyms. The file hyponyms.txt (and other smaller files with hyponym in the name) contains the hyponym relationships: The first field is a synset id; subsequent fields are the id numbers of the synset's direct hyponyms. For example, the following line
 
         79537,38611,9007
 
@@ -138,7 +138,7 @@ The [Google Ngram dataset](http://storage.googleapis.com/books/ngrams/books/data
 
 Our next task will be to allow for the visualization of this historical data on our own terms. Ultimately, we'll combine this dataset with the WordNet dataset to be able to ask new and interesting questions that I don't think have ever been asked before this assignment was created (cool!). 
 
-Over the weekend, I'll be releasing an overview video, as well as [project 1 slides](not yet available) that provide a top-down view of the Ngordnet system. The written spec below should be sufficient to complete the spec, so don't wait if you're eager to continue.
+Over the weekend, I'll be releasing an overview video, as well as [project 1 slides](https://docs.google.com/presentation/d/1KqBKvX6ZOp-8lvKcrE-wTg7_7ZFeeu9cGtH_SHtL4qg/pub?start=false&loop=false&delayms=3000) that provide a top-down view of the Ngordnet system. The written spec below should be sufficient to complete the spec, so don't wait if you're eager to continue.
 
 3: TimeSeries
 =====
@@ -147,7 +147,7 @@ Over the weekend, I'll be releasing an overview video, as well as [project 1 sli
 
 In HW5, we built some basic collections from scratch. Now we'll build a more sophisticated datatype known as a TimeSeries. A TimeSeries will be a special purpose extension of the existing TreeMap class where the key type parameter is always Integer, and the value type parameter is something that extends Number. Each key will correspond to a year, and each value a numerical data point for that year.
 
-For example, the following code would create a TimeSeries<Double> and associate the number 3.6 with 1992 and 9.2 with 1993.
+For example, the following code would create a `TimeSeries<Double>` and associate the number 3.6 with 1992 and 9.2 with 1993.
 
         TimeSeries<Double> ts = new TimeSeries<Double>();
         ts.put(1992, 3.6);
@@ -167,6 +167,8 @@ As throughout this assignment, the MethodSignatures file provided in the skeleto
 As with everything in this assignment you should not create additional public or protected methods. Additional public classes are fine. It is OK to override existing public methods (e.g. equals). 
 
 Warning: It is very easy to run into issues with generics. Compile frequently. Do not dare write more than one of these methods at a time.
+
+Hint (3/6/2015): You should not add any instance variables to your TimeSeries class. They are unnecessary.
 
 4: YearlyRecord
 =====
@@ -190,13 +192,19 @@ The YearlyRecord class will also provide utility methods to make data analysis a
  - counts(): Returns all counts in ascending order of count.
  - rank(String word): Gives the rank of word, with 1 being the most popular word. If two words have the same rank, break ties arbitrarily. No two words should have the same rank.
 
-Revised (friendlier) performance requirements (2/28/15): This one will be a bit more involved than TimeSeries. The rank, size, and count methods should all be very fast, no matter how many words are in the database. Specifically, on a "frozen" YearlyRecord, their runtime should be about the same no matter how large the YearlyRecord, where a frozen YearlyRecord is defined as one for which no additional put operations occur. That means no looping, recursion, sorting, or similar. You can achieve this through judicious use of the right data structures. You may assume that the get methods of a map take about the same time no matter how large the map. You may not assume this about the get methods of lists. 
+Revised (friendlier) performance requirements (2/28/2015): This one will be a bit more involved than TimeSeries. The rank, size, and count methods should all be very fast, no matter how many words are in the database. Specifically, on a "frozen" YearlyRecord, their runtime should be about the same on average no matter how large the YearlyRecord, where a frozen YearlyRecord is defined as one for which no additional put operations occur. That means that typical calls to these methods cannot use looping, recursion, sorting, or similar. However, it is OK if one or more of these techniques is used rarely. See <a href="https://docs.google.com/presentation/d/1KqBKvX6ZOp-8lvKcrE-wTg7_7ZFeeu9cGtH_SHtL4qg/edit#slide=id.g7be664e68_15117">this example</a> for more.
 
-Revised (stricter) performance revision (3/3/15): Your put method should be fast no matter how large the datafiles. Otherwise the plotting part of this assignment will be no fun because you'll be stuck with tiny datasets. 
+You can achieve this through judicious use of the right data structures. You may assume that the get methods of a map take about the same time no matter how large the map. You may not assume this about the get methods of lists. 
+
+Revised (stricter) performance revision (3/3/2015): For 0.1 points of extra credit, your put method should be fast no matter how large the datafiles. This will also make the plotting part of the assignment more interesting since you'll be able to read all\_words.csv.
+
+**See the provided YearlyRecordTimeTest.java.freetest file for a timing test.** You'll need to rename this file to have a .java extension before it can be compiled.
 
 See the [YearlyRecord javadocs](javadocs/index.html?ngordnet/YearlyRecord.html) for a more precise technical specification, and YearlyRecordDemo for additional examples showing typical use.
 
-**The basics autograder will cover up through this point in the project. Your project 1 bonus point will depend on how many AG tests you have completed by March 6th. The basics autograder will begin running the weekend of February 28th. It is intended as a basic sanity check only, and will not be a thorough test.**
+New note (3/6/2015): If you end up going down a blackhole of bad performance and you're pretty sure you've hit a dead end, don't be afraid to scrap your design and redo it from scratch. It might feel like you're redoing everything, but most of the work is in building a mental model of what your code should be doing, and the actual programming part shouldn't be so bad (except when learning new syntax).
+
+**The basics autograder will cover up through this point in the project. Your project 1 bonus point will depend on how many AG tests you have completed by March 6th at 11:59 PM. It is intended as a basic sanity check only, and will not be a thorough test.** The submit autograder will run on the evenings of March 7th, 8th, 9th, 10th, and 11th.
 
 5: NGramMap
 =====
@@ -226,7 +234,9 @@ As with WordNet, most of the work will be in the constructor. Make sure to pick 
 
 As with our other classes, see the [NGramMap (javadocs)](javadocs/index.html?ngordnet/NGramMap.html) for a more detailed technical specification, and see NGramMapDemo for example usages.
 
-Revision (3/3/2015): Your code should be fast enough that you can create an NGramMap using all_words.csv. Loading should take less than 20 seconds.
+Revision (3/3/2015): Your code should be fast enough that you can create an NGramMap using all_words.csv. Loading should take less than 60 seconds (maybe a bit longer on an older computer).
+
+Hint (3/6/2015): Avoid using using a HashMap or TreeMap as an [actual type argument](https://docs.google.com/presentation/d/1j2vivowiaZWepIjUoWj6Cx3CdJiyuYslxkg8GsT8kxM/pub?start=false&loop=false&delayms=3000&slide=id.g631db3c57_38) for your maps. This gets messy, and I'd recommend using the TimeSeries and YearlyRecord classes instead. In other words, if your code involves nested mapping that looks like `HashMap<blah, HashMap<blah, blah>>`, then a YearlyRecord or TimeSeries might be useful to keep in mind instead.
 
 The NGram Input File Formats
 ------
@@ -267,7 +277,7 @@ The Plotter class will use a WordNet and/or NGramMap object to create plots of d
 
 We will not be grading these plots, but you're missing out if you don't write the methods that produce them. The code should all be straightforward. 
 
-For this part, complete every method except ```plotProcessedHistory``` and ```plotZipfsLaw```. 
+For this part, complete every method except ```plotProcessedHistory``` and ```plotZipfsLaw```. Make sure to see [the proj1 slides](https://docs.google.com/presentation/d/1KqBKvX6ZOp-8lvKcrE-wTg7_7ZFeeu9cGtH_SHtL4qg/edit#slide=id.g7be664e68_15128) for more.
 
 
 7: NgordnetUI
@@ -277,7 +287,7 @@ In this part, you'll create a UI with the following commands:
  
  - quit: program exits
  - help: Provides a list of commands.
- - range [start] [end]: resets the start and end years to the values provided.
+ - range [start] [end]: resets the start and end years to the values provided. affects only future plots, not existing plots.
  - count [word] [year]: print the count of word in the given year.
  - hyponyms [word]: prints all hyponyms of the given word using the default Set string representation (see below).
  - history [words...]: plots relative frequency of all words from start to end.
@@ -328,7 +338,7 @@ As the last part of this project, we'll add the plotZipfsLaw method to [Plotter 
 
 Add the follow command to NgornetUI:
 
-    zipf year: plots the count of every word vs. its rank on a log log plot.
+    zipf year: plots the count (or weight) of every word vs. its rank on a log log plot.
 
 Try it out (either using Plotter directly or with your NgordnetUI), and you should observe that the data lies on a straight line moving from the top left to the bottom right, at least up until it reaches a certain point where it drops off suddenly. This is straight line behavior is a surprising fact! Even more bizarre is the fact that this straight line has a slope of roughly -1 (you can observe this by seeing that the top left point and the bottom right point span the same number of orders of magnitude).
 
