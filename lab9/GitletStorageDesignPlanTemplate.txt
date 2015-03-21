@@ -4,7 +4,10 @@ Basic Storage Design Plan for Gitlet
 Overview
 -------
 
-
+The neccesary files are contained in .gitlet. There is a State.ser file which 
+records the information about previous commits and related file location
+Also, there are folders named with the commit IDs which contains the minimal
+and neccesary copies of files  
 
 
 Sequential Example
@@ -14,66 +17,87 @@ For each of the commands below, describe in detail what files on your computer c
 
 $ java Gitlet init
 
- . If it does not already exist, a new folder called .gitlet is created in the current directory.
-
-
+	. If it does not already exist, a new folder called .gitlet is created in the current directory.
+	. A new serializable State object is created and stored in .gitlet/state.ser, which includes three variables
+		1.	addSet: address of the staged files (empty initially)
+		2.	commitTree: a tree/ branching linked-list containing commit dates, message and filenames 
+			(containing only commit zero with no files)
+		3.	headPointer: a map pointing at end of branches as well as HEAD
 
 $ java Gitlet add dog.txt
 
+	. Check if the file has been changed after the last commit in which the file is added
+	. Store file address at variable addSet in State object
 
 
 $ java Gitlet commit “initial commit of dog.txt”
 
-
+	. create folder named with the ID of the commit in .gitlet
+	. copy added files into folder
+	. add commit node to commitTree object
+	. clear addSet
 
 
 $ java Gitlet add dog.txt
 
-
+	. Gitlet checks the timestamp of the last commit in which dog.txt exists and compares it to last modified date
+	. Since the last modified precedes time of last commit, Gitlet does nothing and displays error message
 
 
 $ cp manyDogs.txt dog.txt
 $ java Gitlet add dog.txt
 
-
-
+	. Gitlet checks the timestamp of the last commit in which dog.txt exists and compares it to last modified date
+	. Since the last modified comes after time of last commit, Gitlet adds the address to addSet
 
 $ java Gitlet commit “replaced dog.txt with manyDogs”
 
-
-
+	. Gitlet creates a new folder with ID 2 in .getlet
+	. copies added files into folder
+	. add commit node to commitTree object
+	. clear addSet
 
 $ java Gitlet add manyDogs.txt
 
-
+	. the address is added to addSet
 
 
 $ java Gitlet add ketchupFriend.txt
 
-
+	. the address is added to addSet
 
 $ java Gitlet commit “added manyDogs and ketchupFriend”
 
-
+	. Gitlet creates a new folder with ID 3 in .getlet
+	. copies added files into folder
+	. add commit node to commitTree object with new timestamp
+	. clear addSet
 
 
 $ java Gitlet commit YOLO
 
-
+	. addSet is empty, so no commit happens
 
 $ cp doge.txt manyDogs.txt
 $ java Gitlet add manyDogs.txt
 
-
+	. manydogs.txt is added to addSet
 
 $ java Gitlet commit “replaced manyDogs with doge”
 
-
+	. Gitlet creates a new folder with ID 4 in .getlet
+	. copies added manyDogs.txt into folder
+	. add commit node to commitTree object with new timestamp
+	. clear addSet
 
 $ java Gitlet add dog.txt
 
-
+	. dog.txt is added to addSet
 
 $ java Gitlet commit “added dog yet again”
 
+	. Gitlet creates a new folder with ID 5 in .getlet
+	. copies added Dogs.txt into folder
+	. add commit node to commitTree object with new timestamp
+	. clear addSet
 
