@@ -23,7 +23,7 @@ public class State implements Serializable {
 	protected ArrayList<Commit> commitList;
 	// commit id of the next commit
 	protected int cid = 0;
-	private static final String GITLET_DIR = ".gitlet/";
+	private static final String GITLET_DIR = ".Gitlet/";
 
 	public State() {
 		root = new Commit();

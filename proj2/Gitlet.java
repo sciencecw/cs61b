@@ -14,7 +14,7 @@ public class Gitlet {
 
     private static State state;
     private static String[] argm;
-    private static final String GITLET_DIR = ".gitlet/";
+    private static final String GITLET_DIR = ".Gitlet/";
 
     private static void init() {
         if (isInit()){
