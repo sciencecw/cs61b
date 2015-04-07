@@ -14,13 +14,14 @@ public class Gitlet {
 
     private static State state;
     private static String[] argm;
+    private static String GITLET_DIR = ".gitlet/";
 
     private static void init() {
         if (isInit()){
             System.out.println("A gitlet version control system already exists in the current directory.");
         }else {
             state = new State();
-            File f1 = new File(".Gitlet/");
+            File f1 = new File(GITLET_DIR);
             if (!f1.exists()) {
                 f1.mkdir();
             } else {

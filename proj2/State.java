@@ -23,6 +23,7 @@ public class State implements Serializable {
 	protected ArrayList<Commit> commitList;
 	// commit id of the next commit
 	protected int cid = 0;
+	private static final String GITLET_DIR = ".gitlet/";
 
 	public State() {
 		root = new Commit();
@@ -171,7 +172,7 @@ public class State implements Serializable {
 		HashMap<File,File> oldmap = getAdss("HEAD");
 		remap.putAll(oldmap); // put all old addresses in
 		// create new folder
-		File folder = new File(".Gitlet/" + commitName(cid) + "/");
+		File folder = new File(GITLET_DIR + commitName(cid) + "/");
 		if (folder.exists()) {
 			throw new RuntimeException("Gitlet folder already exist");
 		} else {
@@ -199,7 +200,7 @@ public class State implements Serializable {
 	}
 
 	private File getGitletfolder(int id) {
-		return new File(".Gitlet/" + commitName(id) + "/");
+		return new File(GITLET_DIR + commitName(id) + "/");
 	}
 
 	private String commitName(int num) {
