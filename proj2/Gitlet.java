@@ -14,7 +14,8 @@ public class Gitlet {
 
     private static State state;
     private static String[] argm;
-    private static final String GITLET_DIR = ".Gitlet/";
+    private static final String GITLET_DIR = ".gitlet/";
+    private static final String STATE_DIR = ".gitlet/State.ser";
 
     private static void init() {
         if (isInit()){
@@ -84,7 +85,7 @@ public class Gitlet {
     //Helper methods
     private static void writeState() {
         try {
-            File sfile = new File(".Gitlet/State.ser");
+            File sfile = new File(STATE_DIR);
             FileOutputStream fos = new FileOutputStream(sfile);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             //System.out.println(state);
@@ -98,7 +99,7 @@ public class Gitlet {
 
     private static void readState() {
         try {
-            File sfile = new File(".Gitlet/State.ser");
+            File sfile = new File(STATE_DIR);
             FileInputStream fis = new FileInputStream(sfile);
             ObjectInputStream ois = new ObjectInputStream(fis);
             Object sObj = ois.readObject();
@@ -110,7 +111,7 @@ public class Gitlet {
     }
 
     private static boolean isInit() {
-        return new File(".Gitlet/State.ser").exists(); 
+        return new File(STATE_DIR).exists(); 
     }
 
     private static boolean checklength(int lg) {
