@@ -45,6 +45,7 @@ public class State implements Serializable {
 			} else {
 				System.out.println("File has not been modified since the last commit.");
 			}
+		} else {
 			System.out.println("File does not exist, or the address is not a file.");
 		}
 		return false;
@@ -171,7 +172,7 @@ public class State implements Serializable {
 		HashMap<File,File> oldmap = getAdss("HEAD");
 		remap.putAll(oldmap); // put all old addresses in
 		// create new folder
-		File folder = new File(GITLET_DIR + commitName(cid) + "/");
+		File folder = getGitletfolder(cid);
 		if (folder.exists()) {
 			throw new RuntimeException("Gitlet folder already exist");
 		} else {
