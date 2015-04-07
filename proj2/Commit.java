@@ -21,7 +21,7 @@ public class Commit implements Serializable  {
 		message = "initial commit";
 	}
 
-	public Commit(Commit prev, int id, Map ads, String msg) {
+	public Commit(Commit prev, int id, Map<File,File> ads, String msg) {
 		previous = prev;
 		date = System.currentTimeMillis();
 		commitid = id; 

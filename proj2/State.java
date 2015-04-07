@@ -114,7 +114,6 @@ public class State implements Serializable {
 		File fi = getheadFile(fnow);
 		try {
 			// replace current file by old file
-			System.out.println("checkout system exit");
 			Files.copy(fi.toPath(),fnow.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			System.out.println(e);
