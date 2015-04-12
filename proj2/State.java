@@ -294,7 +294,7 @@ public class State implements Serializable {
                         break search;
                     }
                 }
-                c = c.getPrev()
+                c = c.getPrev();
                 cid = c.getID();
             }
         return c;
