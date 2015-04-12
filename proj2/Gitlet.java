@@ -54,33 +54,45 @@ public class Gitlet {
         state.glog();
     }   
 
-    private static void find() {
-
+    private static void find(String msg) {
+        state.find(msg);
     }   
 
     private static void status() {
-
+        state.status();
     }   
 
     private static void ckout(String s, int id) {
-
+        state.checkout(s, id);
     } 
 
     private static void ckout(String s) {
         state.checkout(s);
     }   
 
-    private static void branch() {
-
+    private static void branch(String b) {
+        state.branch(b);
     }   
 
-    private static void rmBranch() {
-
+    private static void rmBranch(String b) {
+        state.rmBranch(b);
     }   
 
-    private static void reset() {
-
+    private static void reset(int cid) {
+        state.reset(cid);
     }   
+
+    private static void merge(String b) {
+        state.merge(b);
+    }   
+
+
+
+    private static void test() {
+        state.test();
+    }
+
+
 
     //Helper methods
     private static void writeState() {
@@ -118,22 +130,22 @@ public class Gitlet {
         return argm.length >= lg;
     }
 
-    private static void danger(){
+    private static boolean noDanger(){
         System.out.println("Warning: The command you entered may alter the files"
-         + "in your working directory. Uncommitted changes may be lost." 
+         + " in your working directory. Uncommitted changes may be lost." 
          + " Are you sure you want to continue? (yes/no)");
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String textLine = reader.readLine();
             if (textLine.startsWith("yes")){
-                return;
+                return true;
             } else {
-                System.exit(0);
+                return false;
             }
         } catch (IOException e) {
             System.out.println("error reading your response.");
             System.out.println(e);
-            System.exit(0);
+            return false;
         }
     }
 
@@ -161,10 +173,25 @@ public class Gitlet {
                             break;
                 case "global-log": globalLog();
                             break;
-                case "checkout": danger();
-                        System.out.println(argm.length);
-                        if (checklength(3)) ckout(args[2],Integer.parseInt(args[1]));
-                        else if (checklength(2)) ckout(args[1]);
+                case "find": if (checklength(2)) find(args[1]);
+                            break;
+                case "status": status();
+                            break;
+                case "checkout": if (noDanger()) {
+                                    if (checklength(3)) ckout(args[2],Integer.parseInt(args[1]));
+                                    else if (checklength(2)) ckout(args[1]);
+                                }
+                            break;
+                case "branch": if (checklength(2)) branch(args[1]);
+                                break;                                
+                case "rm-branch": if (checklength(2)) rmBranch(args[1]);
+                                break;
+                case "reset": if (checklength(2)) reset(Integer.parseInt(args[1]));
+                                break;
+                case "merge": if (checklength(2)) merge(args[1]);
+                                break;
+                //test instance (!!!!)
+                case "test": test();
                         break;
             }
             writeState();

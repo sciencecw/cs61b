@@ -9,6 +9,7 @@ public class Commit implements Serializable  {
 	private final Commit previous;
 	private final long date; 
 	private final int commitid;
+	// key: original file address, value: committed copy address
 	private final HashMap<File,File> fileAddress;
 	private final String message;
 
