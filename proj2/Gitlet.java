@@ -1,12 +1,9 @@
 import java.io.File;
-import java.util.Date;
 import java.io.IOException;
-import java.lang.ClassNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
-import java.text.SimpleDateFormat;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -18,9 +15,10 @@ public class Gitlet {
     private static final String STATE_DIR = ".gitlet/State.ser";
 
     private static void init() {
-        if (isInit()){
-            System.out.println("A gitlet version control system already exists in the current directory.");
-        }else {
+        if (isInit()) {
+            System.out.println("A gitlet version control system already"
+                + " exists in the current directory.");
+        } else {
             state = new State();
             File f1 = new File(GITLET_DIR);
             if (!f1.exists()) {
@@ -34,12 +32,16 @@ public class Gitlet {
 
     private static void add(String fileString) {
         File f = new File(fileString);
-        boolean hasAdd = state.addFile(f); 
+        state.addFile(f); 
         return;
     }
 
-    private static void commit(String msg) {
-        state.commit(msg);
+    private static void commit() {
+        if (checklength(2)) {
+            state.commit(argm[1]);
+        } else {
+            System.out.println("Please enter a commit message.");
+        } 
     }
     
     private static void rm(String fileString) {
@@ -62,6 +64,16 @@ public class Gitlet {
         state.status();
     }   
 
+    private static void checkout() {
+        if (noDanger()) {
+            if (checklength(3)) {
+                ckout(argm[2], Integer.parseInt(argm[1]));
+            } else if (checklength(2)) {
+                ckout(argm[1]);   
+            }
+        }
+    }
+
     private static void ckout(String s, int id) {
         state.checkout(s, id);
     } 
@@ -78,12 +90,16 @@ public class Gitlet {
         state.rmBranch(b);
     }   
 
-    private static void reset(int cid) {
-        state.reset(cid);
+    private static void reset() {
+        if (checklength(2)) {
+            state.reset(Integer.parseInt(argm[1]));
+        } 
     }   
 
-    private static void merge(String b) {
-        state.merge(b);
+    private static void merge() {
+        if (checklength(2)) {
+            state.merge(argm[1]);
+        } 
     }   
 
     private static void rebase(String b) {
@@ -123,7 +139,7 @@ public class Gitlet {
             Object sObj = ois.readObject();
             state = (State) sObj;
             ois.close();            
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (ClassNotFoundException | IOException e) {
             System.out.println("fail to read state");
         }
     }
@@ -136,18 +152,14 @@ public class Gitlet {
         return argm.length >= lg;
     }
 
-    private static boolean noDanger(){
+    private static boolean noDanger() {
         System.out.println("Warning: The command you entered may alter the files"
-         + " in your working directory. Uncommitted changes may be lost." 
-         + " Are you sure you want to continue? (yes/no)");
+            + " in your working directory. Uncommitted changes may be lost." 
+            + " Are you sure you want to continue? (yes/no)");
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String textLine = reader.readLine();
-            if (textLine.startsWith("yes")){
-                return true;
-            } else {
-                return false;
-            }
+            return textLine.startsWith("yes");
         } catch (IOException e) {
             System.out.println("error reading your response.");
             System.out.println(e);
@@ -168,39 +180,67 @@ public class Gitlet {
         if (isInit()) {
             readState();
             switch (args[0]) {
-                case "add": if (checklength(2)) add(args[1]);
-                            break;
-                case "commit": if (checklength(2)) commit(args[1]);
-                                else System.out.println("Please enter a commit message.");
-                            break;
-                case "rm": if (checklength(2)) rm(args[1]);
-                            break;
-                case "log": log();
-                            break;
-                case "global-log": globalLog();
-                            break;
-                case "find": if (checklength(2)) find(args[1]);
-                            break;
-                case "status": status();
-                            break;
-                case "checkout": if (noDanger()) {
-                                    if (checklength(3)) ckout(args[2],Integer.parseInt(args[1]));
-                                    else if (checklength(2)) ckout(args[1]);
-                                }
-                            break;
-                case "branch": if (checklength(2)) branch(args[1]);
-                                break;                                
-                case "rm-branch": if (checklength(2)) rmBranch(args[1]);
-                                break;
-                case "reset": if (checklength(2)) reset(Integer.parseInt(args[1]));
-                                break;
-                case "merge": if (checklength(2)) merge(args[1]);
-                                break;
-                case "rebase": if (checklength(2)) rebase(args[1]);
-                                break;
-                //test instance (!!!!)
-                case "test": test();
-                        break;
+                case "add": 
+                    if (checklength(2)) {
+                        add(args[1]);
+                    } 
+                    break;
+                case "commit": 
+                    commit();
+                    break;
+                case "rm": 
+                    if (checklength(2)) {
+                        rm(args[1]);  
+                    } 
+                    break;
+                case "log": 
+                    log();
+                    break;
+                case "global-log": 
+                    globalLog();
+                    break;
+                case "find": 
+                    if (checklength(2)) {
+                        find(args[1]);  
+                    } 
+                    break;
+                case "status": 
+                    status();
+                    break;
+                case "checkout": 
+                    checkout();
+                    break;
+                case "branch": 
+                    if (checklength(2)) {
+                        branch(args[1]);
+                    } 
+                    break;                                
+                case "rm-branch": 
+                    if (checklength(2)) {
+                        rmBranch(args[1]);
+                    } 
+                    break;
+                case "reset": 
+                    reset();
+                    break;
+                case "merge": 
+                    merge();
+                    break;
+                case "rebase": 
+                    if (checklength(2)) {
+                        rebase(args[1]);
+                    } 
+                    break;
+                case "i-rebase": 
+                    if (checklength(2)) {
+                        iRebase(args[1]);
+                    } 
+                    break;
+                case "test": 
+                    test();
+                    break;
+                default:
+                    break;
             }
             writeState();
         } else {

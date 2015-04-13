@@ -3,11 +3,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
 import java.io.File;
-import java.nio.file.Files;
-import java.util.Date;
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 
@@ -21,18 +22,17 @@ commit/pointer does not exist
 */
 
 public class State implements Serializable {
-    protected Commit root;  // not sure how useful is this; might review later
-                            // Stores the initial commit address
-    // List of IO addresses to the files to be copied
-    protected HashSet<File> addSet;
-    protected HashSet<File> rmSet;
+    private Commit root;  
+    // List of addresses to the files to be copied
+    private HashSet<File> addSet;
+    private HashSet<File> rmSet;
     // pointers to end of each branch as well as HEAD pointer
-    public HashMap<String,Commit> branches;
-    protected String curBranch;
+    private HashMap<String, Commit> branches;
+    private String curBranch;
     // list of all commits according to their ID
-    protected ArrayList<Commit> commitList;
+    private ArrayList<Commit> commitList;
     // commit id of the next commit
-    protected int cid = 0;
+    private int cid = 0;
     private static final String GITLET_DIR = ".gitlet/";
 
     public State() {
@@ -40,20 +40,17 @@ public class State implements Serializable {
         addSet = new HashSet<File>();
         rmSet = new HashSet<File>();
         branches = new HashMap<String, Commit>();
-        branches.put("HEAD", root);
-        branches.put("master", root);
         curBranch = "master";
         commitList = new ArrayList<Commit>();
-        commitList.add(root);
-        cid = 1;
+        commitAdvance(root);
         return;
     }
 
-    public boolean addFile(File f) {
+    public void addFile(File f) {
         if (f.exists() && f.isFile()) {
             if (isModified(f)) {
                 addSet.add(f);
-                return true;
+                return;
             } else {
                 System.out.println("File has not been "
                     + "modified since the last commit.");
@@ -61,7 +58,7 @@ public class State implements Serializable {
         } else {
             System.out.println("File does not exist, or the address is not a file.");
         }
-        return false;
+        return;
     }
 
     public void commit(String msg) {
@@ -71,14 +68,21 @@ public class State implements Serializable {
         }
         Commit prev = branches.get("HEAD");
         // make new dir, move files
-        HashMap<File,File> ads = commitHelper();
+        HashMap<File, File> ads = commitHelper();
         Commit c = new Commit(prev, cid, ads, msg);
+        commitAdvance(c);
+        addSet.clear(); // clear add set
+        rmSet.clear();
+    }
+
+    /* Put commit into place in commitList and increment cID
+     * Also update Head and branch pointers
+     */
+    private void commitAdvance(Commit c) {
         commitList.add(c);
         // move head and current branch pointer
         branches.put("HEAD", c);
         branches.put(curBranch, c);
-        addSet.clear(); // clear add set
-        rmSet.clear();
         cid += 1;       // update commitid
     }
 
@@ -87,7 +91,7 @@ public class State implements Serializable {
             addSet.remove(f);
             return true;
         } 
-        HashMap<File,File> oldmap = getAdss("HEAD");
+        HashMap<File, File> oldmap = getAdss("HEAD");
         if (oldmap.containsKey(f)) {
             rmSet.add(f);
             return true;
@@ -98,7 +102,7 @@ public class State implements Serializable {
 
     public void log() {
         Commit ptr = branches.get("HEAD");
-        for (;ptr != null; ptr = ptr.getPrev()) {
+        for (; ptr != null; ptr = ptr.getPrev()) {
             printcommit(ptr);
         }
         return;
@@ -111,7 +115,7 @@ public class State implements Serializable {
         return;
     }
 
-    public void checkout(String s){
+    public void checkout(String s) {
         // if it is current branch
         if (s.equals(curBranch)) {
             System.out.println("No need to checkout the current branch.");
@@ -146,10 +150,6 @@ public class State implements Serializable {
             return;
         }
         Commit c = commitList.get(id);
-            // for   Testing only (!!)
-            if (c.getID() != id) {
-                System.out.println("Wrong ID: " + c.getID());
-            } //     Testing only (!!)
         File fi = c.getAddress(fnow);
         if (fi != null) {
             copyfile(fi, fnow);
@@ -162,7 +162,7 @@ public class State implements Serializable {
     public void find(String msg) {
         boolean found = false;
         for (Commit c: commitList) {
-            if (c != null && c.getMessage().equals(msg)){
+            if (c != null && c.getMessage().equals(msg)) {
                 System.out.println("" + c.getID());
                 found = true;
             }
@@ -176,7 +176,7 @@ public class State implements Serializable {
         System.out.println("=== Branches ===");
         for (String s: branches.keySet()) {
             if (!s.equals("HEAD")) {
-                if (s.equals(curBranch)){
+                if (s.equals(curBranch)) {
                     System.out.println("*" + s);
                 } else {
                     System.out.println(s);
@@ -208,8 +208,7 @@ public class State implements Serializable {
         if (!branches.containsKey(b)) {
             System.out.println("A branch with that name does not exist.");
             return;
-        }
-        if (b != null && b.equals(curBranch)) {
+        } else if (b != null && b.equals(curBranch)) {
             System.out.println("Cannot remove the current branch.");
             return;
         }
@@ -227,89 +226,106 @@ public class State implements Serializable {
         branches.put(curBranch, c);
     }   
 
-    // must be checked by jUNIT and by hand (!!!!)
     public void merge(String b) {
         Commit cSplit = splitPoint(b);
-        HashMap<File,File> mSplit = cSplit.getAddresses();
-        HashMap<File,File> mNow = getAdss("HEAD");
+        HashMap<File, File> mSplit = cSplit.getAddresses();
+        HashMap<File, File> mNow = getAdss("HEAD");
         // search branch b for changed/new files from SP and check they are not changed in current
-        HashMap<File,File> mGiven = getAdss(b);
+        HashMap<File, File> mGiven = getAdss(b);
         for (File f: mGiven.keySet()) {
             File fs = mSplit.get(f);
             File fg = mGiven.get(f);
             File fn = mNow.get(f);
-            //System.out.println(fn);
-            //System.out.println(fg);
-            //System.out.println(fs);
-            //System.out.println();
-            File fconflct = new File(f.getPath()+".conflict");
+            File fconflct = new File(f.getPath() + ".conflict");
             // current file is not null >> check if given file has been changed
             if (fn == null) {
                 // move fg over to f
                 copyfile(fg, f);
-                //System.out.println("case 1: " + fg.toString());
             } else {
                 if (fs == null) {
                     // conflict case
                     copyfile(fg, fconflct);
-                    //System.out.println("case 2: " + fg.toString());
                 } else if (!fg.equals(fs)) {
                     if (!fn.equals(fs)) {
                         //conlfict case
                         copyfile(fg, fconflct);
-                        //System.out.println("case 3: " + fg.toString());
                     } else {
                         copyfile(fg, f);
-                        //System.out.println("case 4: " + fg.toString());
                     }
-                } else {
-                    //System.out.println("case 5: " + fg.toString());
-                } 
+                }
             }
-
         }
     }
 
-    public void rebase(String b) {
-        Commit cSplit = splitPoint(b);
-        if (cSplit == branches.get("HEAD")) {
-            // move pointer to b
-            branches.put("HEAD", branches.get(b));
+    public void rebase(String b, boolean isInteractive) {
+        if (b == null || !branches.containsKey(b)) {
+            System.out.println(" A branch with that name does not exist.");
+            return;
+        } else if (b.equals(curBranch)) {
+            System.out.println("Cannot rebase a branch onto itself.");
             return;
         }
-        Commit rootBranch = branches.get(b);
-        Commit newestnode = replay(rootBranch, cSplit, branches.get("HEAD"));
+        Commit cSplit = splitPoint(b);
+        Commit cGiven = branches.get(b);
+        if (cSplit == cGiven) {
+            System.out.println("Already up-to-date.");
+            return;
+        } else if (cSplit == branches.get("HEAD")) {
+            // move pointer to b
+            System.out.println("pointer moves");
+            branches.put("HEAD", cGiven);
+            branches.put(curBranch, cGiven);
+            revertcommit(cGiven);
+            return;
+        }
+        if (isInteractive) {
+            System.out.println("Currently replaying:");
+        }
+        Commit newestnode = replay(cGiven, cSplit, branches.get("HEAD"), isInteractive);
         revertcommit(newestnode);
-        System.out.println("neweste Node");
-        System.out.println(newestnode.getAddresses());
     }
 
-    private Commit replay(Commit prev, Commit cSplit, Commit cNow) {
+    private Commit replay(Commit prev, Commit cSplit, Commit cNow, boolean isInteractive) {
+        boolean isFirstLast = (cNow == branches.get("HEAD"));
         if (cNow == cSplit) {
             return null;
         }   
-        Commit retnCommit = replay(prev, cSplit, cNow.getPrev());
-        System.out.println(cNow.getID());
+        Commit retnCommit = replay(prev, cSplit, cNow.getPrev(), isInteractive);
+        /* returned commit is the commit this commit should be attached to
+         * if no commit is returned then prev = given branch is used
+         */
         if (retnCommit != null) {
             prev = retnCommit;
+        } else {
+            isFirstLast = true;
         }
-        // make new dir, move files
-        HashMap<File,File> mPlayed = replayHelper(cSplit, cNow, prev);
-        String msg = cNow.getMessage();
+        String msg = cNow.getMessage();  
+        char replay = 'c';   // default is continue
+        if (isInteractive) { 
+            // print commit and take input from user
+            printcommit(cNow);
+            replay = ireplayCheck(isFirstLast);
+            // skipping case
+            if (replay == 's') { 
+                return retnCommit;
+            // changing message
+            } else if (replay == 'm') {
+                msg = ireplayMessage();
+            }
+        }
+        // Move files to new node
+        HashMap<File, File> mPlayed = replayHelper(cSplit, cNow, prev);
         Commit newNode = new Commit(prev, cid, mPlayed, msg);
-        commitList.add(newNode);
-        // move current branch pointer
-        branches.put(curBranch, newNode);
-        branches.put("HEAD", newNode);        
-        cid += 1;       // update commitid
+        commitAdvance(newNode);
         return newNode;
     }
 
-    private HashMap<File,File> replayHelper(Commit cSplit, Commit cNow, Commit cGiven) {
-        HashMap<File,File> mPlayed = new HashMap<File,File>();
-        HashMap<File,File> mSplit = cSplit.getAddresses();
-        HashMap<File,File> mNow = cNow.getAddresses();
-        HashMap<File,File> mGiven = cGiven.getAddresses();
+
+    private HashMap<File, File> replayHelper(Commit cSplit, Commit cNow, Commit cGiven) {
+        HashMap<File, File> mPlayed = new HashMap<File, File>();
+        HashMap<File, File> mSplit = cSplit.getAddresses();
+        HashMap<File, File> mNow = cNow.getAddresses();
+        HashMap<File, File> mGiven = cGiven.getAddresses();
         mPlayed.putAll(mNow);
         for (File f: mGiven.keySet()) {
             File fs = mSplit.get(f);
@@ -328,16 +344,11 @@ public class State implements Serializable {
         return mPlayed;
     }
 
-
-
-
-
-
     private int[] prevCommitid(String b) {
         Commit c = branches.get(b);
         int[] cArray = new int[commitList.size()];
         int i = 0; 
-        for (;c != null; c = c.getPrev()) {
+        for (; c != null; c = c.getPrev()) {
             cArray[i] = c.getID();
             i++;
         }
@@ -347,22 +358,21 @@ public class State implements Serializable {
     private Commit splitPoint(String b) {
         int[] cArray = prevCommitid(b);
         Commit c = branches.get("HEAD");
-        int cid = c.getID();
+        int id = c.getID();
         search:  
-            while (cid > 0) {
+            while (id > 0) {
                 for (int i = 0; i < cArray.length && cArray[i] != 0; i++) {
-                    if (cArray[i] == cid) {
+                    if (cArray[i] == id) {
                         break search;
                     }
                 }
                 c = c.getPrev();
-                cid = c.getID();
+                id = c.getID();
             }
         return c;
     }
 
-
-    //(for testing purpose only) (!!!!!!)
+    //(for testing purpose only) 
     public void test() {
         Commit c = branches.get("HEAD");
         System.out.println("ArrayList index: " + commitList.indexOf(c));
@@ -377,14 +387,48 @@ public class State implements Serializable {
 
 
 
+    // MINOR HELPER METHODS
+    private String readInput() {
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            return reader.readLine();
+        } catch (IOException e) {
+            System.out.println(e);
+            return "";
+        }
+    }
 
+    private char ireplayCheck(boolean isFirstLast) {
+        String textLine = ""; 
+        while (ireplayCheckHelper(textLine, isFirstLast)) {
+            System.out.println("Would you like to (c)ontinue, (s)kip this " 
+                + "commit, or change this commit's (m)essage?");
+            textLine = readInput();
+        }
+        return textLine.charAt(0);
+    }
 
-    // HELPER METHODS
+    private String ireplayMessage() {
+        String textLine = ""; 
+        while (textLine.equals("")) {
+            System.out.println("Please enter a new message for this commit.");
+            textLine = readInput();
+        }
+        return textLine;
+    }
+
+    private boolean ireplayCheckHelper(String textLine, boolean isFirstLast) {
+        if (isFirstLast) {
+            return !(textLine.startsWith("c") || textLine.startsWith("m"));
+        } 
+        return !(textLine.startsWith("c") || textLine.startsWith("s") 
+            || textLine.startsWith("m"));
+    }
 
 
     private void revertcommit(Commit c) {
-        HashMap<File,File> ad = c.getAddresses();
-        for (Map.Entry<File,File> e: ad.entrySet()) {
+        HashMap<File, File> ad = c.getAddresses();
+        for (Map.Entry<File, File> e: ad.entrySet()) {
             File fi = e.getKey();
             File ff = e.getValue();
             // copy archive to local
@@ -396,7 +440,7 @@ public class State implements Serializable {
     private void copyfile(File fi, File ff) {
         try {
             // replace current file by old file
-            Files.copy(fi.toPath(),ff.toPath(), 
+            Files.copy(fi.toPath(), ff.toPath(), 
                 StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             System.out.println(e);
@@ -427,7 +471,6 @@ public class State implements Serializable {
                 }
             }
         } catch (IOException | SecurityException e) {
-            System.out.println("Check modified: Exception reading file");
             System.out.println(e);
         }
         return false;
@@ -441,23 +484,21 @@ public class State implements Serializable {
         return ff;
     }
 
-    private HashMap<File,File> getAdss(String ptr) {
+    private HashMap<File, File> getAdss(String ptr) {
         Commit c = branches.get(ptr);
-        HashMap<File,File> ff = c.getAddresses();
+        HashMap<File, File> ff = c.getAddresses();
         return ff;
     }
 
     // use info in addSet and rmSet
     // return fileAddress map and copy files
-    private HashMap<File,File> commitHelper() {
-        HashMap<File,File> remap = new HashMap<File,File>();
-        HashMap<File,File> oldmap = getAdss("HEAD");
+    private HashMap<File, File> commitHelper() {
+        HashMap<File, File> remap = new HashMap<File, File>();
+        HashMap<File, File> oldmap = getAdss("HEAD");
         remap.putAll(oldmap); // put all old addresses in
         // create new folder
         File folder = getGitletfolder(cid);
-        if (folder.exists()) {
-            throw new RuntimeException("Gitlet folder already exist");
-        } else {
+        if (!folder.exists()) {
             folder.mkdir();
         }
         // add all addset stuff into new commit
@@ -469,10 +510,9 @@ public class State implements Serializable {
             }
             //copy files into gitlet folder
             try {
-                Files.copy(fi.toPath(),ff.toPath());
+                Files.copy(fi.toPath(), ff.toPath());
             } catch (IOException e) {
                 System.out.println(e);
-                System.out.println("Potential commit failure");
             }
         }
         for (File fi: rmSet) {
@@ -486,7 +526,7 @@ public class State implements Serializable {
     }
 
     private String commitName(int num) {
-        return String.format("%05d",num);
+        return String.format("%05d", num);
     }
 
     private void printcommit(Commit c) {
@@ -498,8 +538,4 @@ public class State implements Serializable {
         System.out.println();
     }
 }
-
-
-
-
 

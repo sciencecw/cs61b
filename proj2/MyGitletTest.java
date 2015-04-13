@@ -1,6 +1,7 @@
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -323,12 +324,114 @@ public class MyGitletTest {
         assertEquals(f5Text, getText(f5Name));
     }   
 
-    /*@Test
-     * public void testRebaseBasic() {
-     *
-     *
-     *}
-     */
+    @Test
+    public void testRebaseBasic() {
+        String wugFileName = TESTING_DIR + "wug.txt";
+        String wugText = "This is a wug.";
+        String newFileName = TESTING_DIR + "new1.txt";
+        String newText = "Here is a new file.";
+        createFile(wugFileName, wugText);
+        gitlet("init");
+        gitlet("add", wugFileName);
+        gitlet("commit", "number 1");
+        //make new branch "new"
+        gitlet("branch", "new");
+        //checkout master and make new commit
+        gitlet("checkout", "master");
+        writeFile(wugFileName, wugText + "on new");
+        gitlet("add", wugFileName);
+        gitlet("commit", "mastercommit");
+        // checkout new
+        gitlet("checkout", "new");
+        createFile(newFileName, newText);
+        gitlet("add", newFileName);
+        gitlet("commit", "newcommit");
+        //check contents
+        assertEquals(wugText, getText(wugFileName));
+        
+        // rebase
+        gitlet("rebase", "master");
+        String log = gitlet("log");
+        //System.out.println(log);
+        assertEquals(wugText + "on new", getText(wugFileName));
+        assertEquals(newText, getText(newFileName));
+    }
+    
+    @Test
+    public void testRebaseBasic2() {
+        String wugFileName = TESTING_DIR + "wug.txt";
+        String wugText = "This is a wug.";
+        String delFileName = TESTING_DIR + "new1.txt";
+        String delText = "Here is a deleted file.";
+        createFile(wugFileName, wugText);
+        createFile(delFileName, delText);
+        gitlet("init");
+        gitlet("add", wugFileName);
+        gitlet("add", delFileName);
+        gitlet("commit", "number 1");
+        //make new branch "new"
+        gitlet("branch", "new");
+        //checkout master and make new commit
+        gitlet("checkout", "master");
+        writeFile(wugFileName, wugText + "on master");
+        gitlet("add", wugFileName);
+        recursiveDelete(new File(delFileName));
+        gitlet("rm", delFileName);
+        gitlet("commit", "mastercommit");
+        
+        // rebase
+        String rebaselog = gitlet("rebase", "new");
+        assertTrue(rebaselog.contains("Already up-to-date."));
+        String log = gitlet("log");
+        assertEquals(wugText + "on master", getText(wugFileName));
+        assertEquals("", getText(delFileName));
+    }
+
+    // pointer advancing case
+    @Test
+    public void testRebaseBasic3() {
+        String wugFileName = TESTING_DIR + "wug.txt";
+        String wugText = "This is a wug.";
+        String delFileName = TESTING_DIR + "del.txt";
+        String delText = "Here is a deleted file.";
+        createFile(wugFileName, wugText);
+        createFile(delFileName, delText);
+        gitlet("init");
+        gitlet("add", wugFileName);
+        gitlet("add", delFileName);
+        gitlet("commit", "number 1");
+
+        //make new branch "new"
+        gitlet("branch", "new");
+        //checkout master and make new commit
+        gitlet("checkout", "master");
+        writeFile(wugFileName, wugText + "on master");
+        gitlet("add", wugFileName);
+        recursiveDelete(new File(delFileName));
+        gitlet("rm", delFileName);
+        gitlet("commit", "mastercommit");
+        //clean the firectory
+        File f = new File(TESTING_DIR);
+        recursiveDelete(f);
+        f.mkdir();
+        gitlet("checkout", "new");
+        // the files should be the same as the first commit
+        assertEquals(wugText, getText(wugFileName));
+        assertEquals(delText, getText(delFileName));
+        
+        recursiveDelete(f);
+        f.mkdir();
+        assertEquals("", getText(delFileName));
+        // rebase
+        String rebaselog = gitlet("rebase", "master");
+        assertFalse(rebaselog.contains("Already up-to-date."));
+        String log = gitlet("log");
+        // check that the pointer has moved to the second commit
+        assertTrue(log.contains("mastercommit"));
+        assertEquals(wugText + "on master", getText(wugFileName));
+        assertEquals("", getText(delFileName));
+
+    }
 
     @Test
     public void testRebaseAdvanced() {
@@ -407,13 +510,8 @@ public class MyGitletTest {
             gitlet("add", bcFileName);
             gitlet("commit", "master commit" + i);            
         }
-        // branching case here?
-        System.out.println("stopping before rebase");
-        stopping();
         // REBASE
         String rebaselog = gitlet("rebase", "given");
-        System.out.println("rebaselog" + rebaselog);
-        stopping();
         assertEquals(wugText2, getText(wugFileName));
         for (int i = 2; i < 11; i++) {
             newwugFileName = TESTING_DIR + "wug"+ i + ".txt";
@@ -427,9 +525,104 @@ public class MyGitletTest {
         assertTrue(logContent.contains("master commit5"));
         assertTrue(logContent.contains("initial commit"));
         assertTrue(logContent.contains("number 9"));
-        System.out.println(logContent);
-
     }
+
+        // test interactive rebase
+    @Test
+    public void testIrebase() {
+        String wugFileName = TESTING_DIR + "wug.txt";
+        String wugText = "This is a wug.";
+        String wugText2 = "This is a changed wug.";
+        String delFileName = TESTING_DIR + "del.txt";
+        String delText = "should be deleted";
+        String extraFileName = TESTING_DIR + "extrafile.txt";
+        String extraText = "changed extra";
+        String bcFileName = TESTING_DIR + "bothchangedfile.txt";
+        String bcText = "the original text";
+
+        createFile(wugFileName, wugText);
+        createFile(delFileName, delText);
+        createFile(extraFileName, "extra");
+        createFile(bcFileName, bcText);
+        gitlet("init");
+        // make commit 1
+        gitlet("add", wugFileName);         // f1
+        gitlet("add", extraFileName);       // f2
+        gitlet("add", bcFileName);          // f3
+        gitlet("add", delFileName);         // f4
+        gitlet("commit", "number 1");
+
+        recursiveDelete(new File(delFileName));
+        gitlet("rm", delFileName);
+        writeFile(bcFileName, "given text");
+        gitlet("add", bcFileName);
+
+        gitlet("branch", "given");          // create branch named "given"
+        writeFile(wugFileName, wugText2);
+        gitlet("add", wugFileName);
+        for (int i = 2; i < 11; i++) {
+            String newwugFileName = TESTING_DIR + "wug"+ i + ".txt";
+            createFile(newwugFileName, wugText + " (" + i + "th version)");
+            gitlet("add", newwugFileName);
+            gitlet("commit", "number " + i);
+        }
+        File f = new File(TESTING_DIR);
+        if (f.exists()) {
+            recursiveDelete(f);
+        } else {
+            System.out.println("testing file does not exist.");
+        }
+        f.mkdir();
+        String newwugFileName = TESTING_DIR + "wug10.txt";
+        gitlet("checkout", newwugFileName);
+        gitlet("checkout", wugFileName);
+        // verify add text
+        assertEquals(wugText + " (10th version)", getText(newwugFileName));
+        assertEquals(wugText2, getText(wugFileName));
+        recursiveDelete(new File(newwugFileName));
+        recursiveDelete(new File(wugFileName));
+
+        //return to master branch
+        gitlet("checkout", "master");
+        // confirming content is as expected
+        assertEquals(getText(wugFileName), wugText);             //f1
+        assertEquals(getText(extraFileName), "extra");           //f2
+        assertEquals(getText(bcFileName), bcText);               //f3
+        assertEquals(delText, getText(delFileName));             //f4
+        // delete f4 again
+        gitlet("rm", delFileName);
+        recursiveDelete(new File(delFileName));
+        String logContent = gitlet("log");
+        assertArrayEquals(new String[] { "number 1", "initial commit" },
+                extractCommitMessages(logContent));
+        // change extra and bcfile
+        writeFile(extraFileName, extraText);
+        writeFile(bcFileName, "master text");
+        gitlet("add", extraFileName);
+        gitlet("add", bcFileName);
+        for (int i = 1; i < 6; i++) {
+            writeFile(bcFileName, "master text " + i);
+            gitlet("add", bcFileName);
+            gitlet("commit", "master commit" + i);            
+        }
+        // REBASE
+        String[] args = {"i-rebase", "given"}; 
+        Gitlet.main(args);
+
+        stopping();
+        assertEquals(wugText2, getText(wugFileName));
+        for (int i = 2; i < 11; i++) {
+            newwugFileName = TESTING_DIR + "wug"+ i + ".txt";
+            assertEquals(wugText + " (" + i + "th version)", getText(newwugFileName));
+        }
+        assertEquals(extraText, getText(extraFileName));
+        assertEquals("master text 5", getText(bcFileName));
+        assertEquals("", getText(delFileName));
+        logContent = gitlet("log");
+        System.out.println(logContent);
+        stopping();
+    }
+    
 
     private static void stopping(){
         try {
