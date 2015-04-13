@@ -44,7 +44,7 @@ public class Gitlet {
     
     private static void rm(String fileString) {
         File f = new File(fileString);
-        boolean hasrm = state.removeFile(f); 
+        boolean hasrm = state.remove(f); 
         return;
     }
     private static void log() {
@@ -86,7 +86,13 @@ public class Gitlet {
         state.merge(b);
     }   
 
+    private static void rebase(String b) {
+        state.rebase(b, false);
+    }   
 
+    private static void iRebase(String b) {
+        state.rebase(b, true);
+    }   
 
     private static void test() {
         state.test();
@@ -189,6 +195,8 @@ public class Gitlet {
                 case "reset": if (checklength(2)) reset(Integer.parseInt(args[1]));
                                 break;
                 case "merge": if (checklength(2)) merge(args[1]);
+                                break;
+                case "rebase": if (checklength(2)) rebase(args[1]);
                                 break;
                 //test instance (!!!!)
                 case "test": test();

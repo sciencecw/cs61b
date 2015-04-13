@@ -1,8 +1,0 @@
-1 F In an unbalanced tree this is not true
-2 F The upper bound could be N
-3 F The lower bound could be as fast as logN in a balanced tree
-4 T It cannot be slower than linear time even if the tree is completely unbalanced
-5 T since 4 is true this immediately follows
-6 F insert alone takes 2lnN
-7 F they could be both close to the top of the tree
-8 O(N^2)
