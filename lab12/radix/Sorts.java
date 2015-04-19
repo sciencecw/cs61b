@@ -23,6 +23,17 @@ public class Sorts {
      **/
     public static int[] countingSort(int[] keys, int whichDigit) {
         //YOUR CODE HERE
+        int[] nkey = new int[keys.length];
+        int j = 0;
+        for (int digit = 0; digit <  15; digit++) {
+            for (int i = 0; i < keys.length; i++) {
+                if ((keys[i] >>> whichDigit * 4) & 15 == digit) {
+                    nkey[j] = keys[i];
+                    j++;
+                }
+            }
+        }
+        return nkey;
     }
 
     /**
@@ -35,6 +46,12 @@ public class Sorts {
      **/
     public static int[] radixSort(int[] keys) {
         //YOUR CODE HERE
+        int[] temp = new int[keys.length];
+        System.arraycopy(keys, 0, temp, 0, keys.length);
+        for (int d = 0; d < 7; d++) {
+            temp = countingSort(temp, d);
+        }
+        return temp;
     }
 
 }

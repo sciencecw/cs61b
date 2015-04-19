@@ -58,7 +58,7 @@ class SortSounds {
       * while samples are played. As you decrease this number, the animation
       * will run faster, but eventually you'll start getting ugly sound
       * artifacts. */
-    private static final int SAMPLES_TO_PLAY = 1000;
+    private static final int SAMPLES_TO_PLAY = 1200;
 
     /** Number of samples before an instrument is killed. The number of
      * tones audible at once is MAX_SOUND_AGE / SAMPLES_TO_PLAY.  */
@@ -136,9 +136,11 @@ class SortSounds {
 
         double frequency = LOW_TONE + toSort[i] * step;
 
-        SoundGenerator x = new EnvelopedSineWave(0.1, 
+        /*SoundGenerator x = new EnvelopedSineWave(0.1, 
                               frequency, 
                               MAX_SOUND_AGE);
+        */
+        SoundGenerator x = new GuitarString(frequency);    
 
         soundQueue.enqueue(x);
 

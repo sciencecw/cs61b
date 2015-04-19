@@ -215,6 +215,9 @@ public final class Sort {
         int i = lo;
         int j = hi + 1;
         int v = a[lo];
+        SortSounds.play(lo);
+        SortSounds.clearRectangle(lo);
+        SortSounds.drawRectangle(StdDraw.GREEN, lo);
         while (true) { 
 
             // find item on lo to swap
@@ -233,6 +236,9 @@ public final class Sort {
 
         // put partitioning item v at a[j]
         exch(a, lo, j);
+
+        SortSounds.clearRectangle(lo);
+        SortSounds.drawRectangle(StdDraw.CYAN, lo);
 
         // now, a[lo .. j-1] <= a[j] <= a[j+1 .. hi]
         return j;
@@ -253,11 +259,26 @@ public final class Sort {
      **/
     private static void exch(int[] a, int index1, int index2) {
         /** YOUR CODE HERE! */
+        SortSounds.play(index2);
+        SortSounds.clearRectangle(index1);
+        SortSounds.clearRectangle(index2);
+        SortSounds.drawRectangle(StdDraw.RED, index1);
+        SortSounds.drawRectangle(StdDraw.RED, index2);
+        StdDraw.show(5);
+        SortSounds.clearRectangle(index1);
+        SortSounds.clearRectangle(index2);
 
         int tmp = a[index1];
         a[index1] = a[index2];
         a[index2] = tmp;
 
+        SortSounds.play(index1);
+        SortSounds.drawRectangle(StdDraw.RED, index1);
+        SortSounds.drawRectangle(StdDraw.RED, index2);
+        StdDraw.show(5);
+        SortSounds.drawRectangle(StdDraw.CYAN, index1);
+        SortSounds.drawRectangle(StdDraw.CYAN, index2);
+        StdDraw.show(5);
         /** YOUR CODE HERE! */
 
     }
