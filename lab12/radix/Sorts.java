@@ -27,7 +27,7 @@ public class Sorts {
         int j = 0;
         for (int digit = 0; digit <  15; digit++) {
             for (int i = 0; i < keys.length; i++) {
-                if ((keys[i] >>> whichDigit * 4) & 15 == digit) {
+                if ( ((keys[i] >>> (whichDigit * 4)) & 15) == digit) {
                     nkey[j] = keys[i];
                     j++;
                 }
