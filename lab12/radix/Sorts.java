@@ -1,6 +1,8 @@
 /* Radix.java */
 
 package radix;
+//import edu.princeton.cs.introcs.StdRandom;
+//import java.util.Arrays;
 
 /**
  * Sorts is a class that contains an implementation of radix sort.
@@ -25,7 +27,7 @@ public class Sorts {
         //YOUR CODE HERE
         int[] nkey = new int[keys.length];
         int j = 0;
-        for (int digit = 0; digit <  15; digit++) {
+        for (int digit = 0; digit <  16; digit++) {
             for (int i = 0; i < keys.length; i++) {
                 if ( ((keys[i] >>> (whichDigit * 4)) & 15) == digit) {
                     nkey[j] = keys[i];
@@ -48,10 +50,20 @@ public class Sorts {
         //YOUR CODE HERE
         int[] temp = new int[keys.length];
         System.arraycopy(keys, 0, temp, 0, keys.length);
-        for (int d = 0; d < 7; d++) {
+        for (int d = 0; d < 8; d++) {
             temp = countingSort(temp, d);
+            //System.out.println("Sorting: " + Arrays.toString(temp));
         }
         return temp;
     }
+
+    /*public static void main(String[] args) {
+        int[] a = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+        StdRandom.shuffle(a);
+        int[] b = radixSort(a);
+        System.out.println(Arrays.toString(a));
+        System.out.println(Arrays.toString(b));
+    }
+    */
 
 }
