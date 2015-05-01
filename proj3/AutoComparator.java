@@ -17,10 +17,8 @@ public class AutoComparator implements Comparator<TrieNodeAuto> {
 		} 
 		String s1 = c1.getWord();
 		String s2 = c2.getWord();
-		if (s1 == null && s2 == null) {
+		if (s1 == null || s2 == null) {
 			return 0;
-		} else if (s1 == null) {
-			return -1;
 		}
 		return s1.compareTo(c2.getWord());
 	}
