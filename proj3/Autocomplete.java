@@ -1,13 +1,25 @@
+import java.util.PriorityQueue;
+import java.util.LinkedList;
+
 /**
  * Implements autocomplete on prefixes for a given dictionary of terms and weights.
  */
 public class Autocomplete {
+
+    private TrieAuto trie;
     /**
      * Initializes required data structures from parallel arrays.
      * @param terms Array of terms.
      * @param weights Array of weights.
      */
     public Autocomplete(String[] terms, double[] weights) {
+        trie = new TrieAuto();
+        if (terms.length != weights.length) {
+            throw new IllegalArgumentException();
+        }
+        for (int i = 0; i < terms.length; i++) {
+            trie.insert(terms[i], weights[i]);
+        }
     }
 
     /**
@@ -16,6 +28,11 @@ public class Autocomplete {
      * @return
      */
     public double weightOf(String term) {
+        TrieNodeAuto tNode = trie.prefixNode(term);
+        if (tNode.isWord()) {
+            return tNode.getWeight();
+        }
+        return 0.0;
     }
 
     /**
@@ -24,6 +41,11 @@ public class Autocomplete {
      * @return Best (highest weight) matching string in the dictionary.
      */
     public String topMatch(String prefix) {
+        TrieNodeAuto tNode = trie.prefixNode(prefix);
+        while (tNode.hasSubnode()) {
+            tNode = tNode.getmaxNode();
+        }
+        return tNode.getWord();
     }
 
     /**
@@ -34,6 +56,14 @@ public class Autocomplete {
      * @return
      */
     public Iterable<String> topMatches(String prefix, int k) {
+        TrieNodeAuto tNode = trie.prefixNode(prefix);
+        AutoComparator ac = new AutoComparator();
+        PriorityQueue<TrieNodeAuto> pq = new PriorityQueue<TrieNodeAuto>(k, ac);
+        while (!pq.isEmpty()) {
+            tNode = pq.poll();
+
+        }
+        return null;
     }
 
     /**
