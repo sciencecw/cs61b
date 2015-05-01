@@ -101,7 +101,7 @@ public class TrieNodeAuto {
 
     public TrieNodeAuto findWord(String s) {
         if (s == null || s.isEmpty()) {
-            return null;
+            return this;
         }
         char c = s.charAt(0);
         TrieNodeAuto next = this.getNode(c);
