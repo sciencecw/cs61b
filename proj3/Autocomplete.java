@@ -21,7 +21,7 @@ public class Autocomplete {
             trie.insert(terms[i], weights[i]);
         }
     }
-
+  
     public Autocomplete(TrieAuto tr) {
         trie = tr;
     }
@@ -73,17 +73,20 @@ public class Autocomplete {
      */
     public Iterable<String> topMatches(String prefix, int k) {
         checkString(prefix);
+        if (k < 0) {
+            throw new IllegalArgumentException();
+        }
         TrieNodeAuto tNode = trie.prefixNode(prefix);
         if (tNode == null) {
             return new LinkedList<String>();
-        }
-        AutoComparator ac = new AutoComparator();
-        PriorityQueue<TrieNodeAuto> pq = new PriorityQueue<TrieNodeAuto>(k, ac);
+        }      
+        PriorityQueue<TrieNodeAuto> pq 
+            = new PriorityQueue<TrieNodeAuto>(k, new AutoComparator(true));
+        PriorityQueue<TrieNodeAuto> wordsets
+            = new PriorityQueue<TrieNodeAuto>(k, new AutoComparator(false));
         pq.add(tNode);
-        PriorityQueue<TrieNodeAuto> wordsets = new PriorityQueue<TrieNodeAuto>(k, ac);
         while (!pq.isEmpty() && wordsets.size() < k) {
             tNode = pq.poll();
-            //System.out.println(tNode);
             if (tNode.isWord()) {
                 wordsets.add(tNode);
             }
@@ -92,8 +95,13 @@ public class Autocomplete {
             }
         }
         LinkedList<String> words = new LinkedList<String>();
-        for (TrieNodeAuto n: wordsets) {
-            words.add(n.getWord());
+        /*for (Integer n: wordsets) {
+            //System.out.println(n.getWord());
+            System.out.println(n);
+            //words.add(n.getWord());
+        }*/
+        while (!wordsets.isEmpty()) {
+            words.add(wordsets.poll().getWord());
         }
         return words;
     }

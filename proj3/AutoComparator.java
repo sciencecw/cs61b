@@ -2,26 +2,24 @@ import java.util.Comparator;
 
 public class AutoComparator implements Comparator<TrieNodeAuto> {
 
-	public AutoComparator() {
-	}
+    public boolean isMaxweight;
 
-	public int compare(TrieNodeAuto c1, TrieNodeAuto c2) {
-		double diff = c2.getmaxWeight() - c1.getmaxWeight();
-		if (diff == 0) {
-			diff = diff + c2.getChar()-c1.getChar();
-		}
-		if (diff > 0) {
-			return +1;
-		} else if (diff < 0){
-			return -1;
-		} 
-		String s1 = c1.getWord();
-		String s2 = c2.getWord();
-		if (s1 == null || s2 == null) {
-			return 0;
-		}
-		return s1.compareTo(c2.getWord());
-	}
+    public AutoComparator(boolean isMaxw) {
+        isMaxweight = isMaxw;
+    }
 
-	
+    @Override
+    public int compare(TrieNodeAuto c1, TrieNodeAuto c2) {
+        double diff = 0;
+        if (isMaxweight) {
+            diff = c2.getmaxWeight() - c1.getmaxWeight();           
+            //System.out.println("max " + c2.getmaxWeight() + " " + c1.getmaxWeight() + " " + (int) diff);
+        } else {
+            diff = c2.getWeight() - c1.getWeight();
+            //System.out.println(c2.getWeight() + " " + c1.getWeight() + " " + diff);
+        }
+        return (int) diff; 
+    }
+
+    
 }
