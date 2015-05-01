@@ -1,22 +1,33 @@
 import java.util.HashMap;
 
 public class TrieNodeAuto {
+    private char character;
     private String word;
     private boolean isWord;
     private HashMap<Character, TrieNodeAuto> map;
     private double weight;
     private double maxweight;
 
-    public TrieNodeAuto() {
+    public TrieNodeAuto(char c) {
         map = new HashMap<Character, TrieNodeAuto>();
         weight = Double.NEGATIVE_INFINITY;
         isWord = false;
+        character = c;
     }
 
     public void setWord(String s, double wg) {
         isWord = true;
         word = s;
         weight = wg;
+    }
+
+    @Override
+    public String toString() {
+        String s = character + " " + maxweight;
+        if (word != null) {
+            s = s + " " + word;
+        }
+        return s;
     }
 
     public String getWord() {
@@ -48,7 +59,7 @@ public class TrieNodeAuto {
     }
 
     public TrieNodeAuto setNode(char c, boolean isW, String s, double wg) {
-        TrieNodeAuto temp = new TrieNodeAuto();
+        TrieNodeAuto temp = new TrieNodeAuto(c);
         if (isW) {
             temp.setWord(s, wg);
         }

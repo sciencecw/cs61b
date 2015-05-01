@@ -22,6 +22,10 @@ public class Autocomplete {
         }
     }
 
+    public Autocomplete(TrieAuto tr) {
+        trie = tr;
+    }
+
     /**
      * Find the weight of a given term. If it is not in the dictionary, return 0.0
      * @param term
@@ -76,6 +80,7 @@ public class Autocomplete {
         PriorityQueue<TrieNodeAuto> wordsets = new PriorityQueue<TrieNodeAuto>(k, ac);
         while (!pq.isEmpty() && wordsets.size() < k) {
             tNode = pq.poll();
+            //System.out.println(tNode);
             if (tNode.isWord()) {
                 wordsets.add(tNode);
             }

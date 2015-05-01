@@ -6,9 +6,9 @@ public class AutoComparator implements Comparator<TrieNodeAuto> {
 	}
 
 	public int compare(TrieNodeAuto c1, TrieNodeAuto c2) {
-		double diff = c1.getmaxWeight() - c2.getmaxWeight();
+		double diff = c2.getmaxWeight() - c1.getmaxWeight();
 		if (diff > 0) {
-			return 1;
+			return +1;
 		} else if (diff < 0){
 			return -1;
 		} 

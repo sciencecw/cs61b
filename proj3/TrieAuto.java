@@ -12,7 +12,7 @@ public class TrieAuto {
     public TrieNodeAuto root;
 
     public TrieAuto() {
-        root = new TrieNodeAuto(); // sentinel node
+        root = new TrieNodeAuto('a'); // sentinel node
     }
 
     public boolean find(String s, boolean isFullWord) {
