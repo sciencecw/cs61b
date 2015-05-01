@@ -9,7 +9,7 @@ import java.util.ArrayDeque;
  */
 
 public class TrieAuto {
-    private TrieNodeAuto root;
+    public TrieNodeAuto root;
 
     public TrieAuto() {
         root = new TrieNodeAuto(); // sentinel node
@@ -43,6 +43,7 @@ public class TrieAuto {
             } else {
                 pointer = pointer.setNode(c, isLast, s, weight);
             }
+            //System.out.println(c + " " + pointer.getmaxWeight() + "");
         } 
     }
 

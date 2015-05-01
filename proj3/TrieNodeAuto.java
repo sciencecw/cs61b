@@ -3,14 +3,14 @@ import java.util.HashMap;
 public class TrieNodeAuto {
     private String word;
     private boolean isWord;
-    private HashMap<Character, TrieNodeAuto> map;
-    private int idNode;
+    public HashMap<Character, TrieNodeAuto> map;
     private double weight;
     private double maxweight;
 
     public TrieNodeAuto() {
         map = new HashMap<Character, TrieNodeAuto>();
         weight = Double.NEGATIVE_INFINITY;
+        isWord = false;
     }
 
     public void setWord(String s, double wg) {

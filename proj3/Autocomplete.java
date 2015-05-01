@@ -41,11 +41,23 @@ public class Autocomplete {
      * @return Best (highest weight) matching string in the dictionary.
      */
     public String topMatch(String prefix) {
+        checkString(prefix);
         TrieNodeAuto tNode = trie.prefixNode(prefix);
         while (tNode.hasSubnode()) {
-            tNode = tNode.getmaxNode();
+            TrieNodeAuto ttemp = tNode.getmaxNode();
+            if (ttemp.getmaxWeight() >= tNode.getmaxWeight()) {
+                tNode = ttemp;
+            } else {
+                break;
+            }
         }
         return tNode.getWord();
+    }
+
+    private void checkString(String s) {
+        if (s == null) {
+            throw new NullPointerException();
+        }
     }
 
     /**
@@ -56,6 +68,7 @@ public class Autocomplete {
      * @return
      */
     public Iterable<String> topMatches(String prefix, int k) {
+        checkString(prefix);
         TrieNodeAuto tNode = trie.prefixNode(prefix);
         AutoComparator ac = new AutoComparator();
         PriorityQueue<TrieNodeAuto> pq = new PriorityQueue<TrieNodeAuto>(k, ac);
