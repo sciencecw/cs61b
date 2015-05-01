@@ -34,6 +34,10 @@ public class TrieNodeAuto {
         return word;
     }
 
+    public char getChar() {
+        return character;
+    }
+
     public HashMap<Character, TrieNodeAuto> getMap() {
         return map;
     }

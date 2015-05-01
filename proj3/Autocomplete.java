@@ -74,6 +74,9 @@ public class Autocomplete {
     public Iterable<String> topMatches(String prefix, int k) {
         checkString(prefix);
         TrieNodeAuto tNode = trie.prefixNode(prefix);
+        if (tNode == null) {
+            return new LinkedList<String>();
+        }
         AutoComparator ac = new AutoComparator();
         PriorityQueue<TrieNodeAuto> pq = new PriorityQueue<TrieNodeAuto>(k, ac);
         pq.add(tNode);
