@@ -72,11 +72,22 @@ public class Autocomplete {
         TrieNodeAuto tNode = trie.prefixNode(prefix);
         AutoComparator ac = new AutoComparator();
         PriorityQueue<TrieNodeAuto> pq = new PriorityQueue<TrieNodeAuto>(k, ac);
-        while (!pq.isEmpty()) {
+        pq.add(tNode);
+        PriorityQueue<TrieNodeAuto> wordsets = new PriorityQueue<TrieNodeAuto>(k, ac);
+        while (!pq.isEmpty() && wordsets.size() < k) {
             tNode = pq.poll();
-
+            if (tNode.isWord()) {
+                wordsets.add(tNode);
+            }
+            for (TrieNodeAuto n: tNode.getMap().values()) {
+                pq.add(n);
+            }
         }
-        return null;
+        LinkedList<String> words = new LinkedList<String>();
+        for (TrieNodeAuto n: wordsets) {
+            words.add(n.getWord());
+        }
+        return words;
     }
 
     /**

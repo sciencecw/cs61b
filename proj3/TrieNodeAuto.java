@@ -3,7 +3,7 @@ import java.util.HashMap;
 public class TrieNodeAuto {
     private String word;
     private boolean isWord;
-    public HashMap<Character, TrieNodeAuto> map;
+    private HashMap<Character, TrieNodeAuto> map;
     private double weight;
     private double maxweight;
 
@@ -21,6 +21,10 @@ public class TrieNodeAuto {
 
     public String getWord() {
         return word;
+    }
+
+    public HashMap<Character, TrieNodeAuto> getMap() {
+        return map;
     }
 
     public void setmaxWeight(double w) {
