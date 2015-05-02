@@ -100,11 +100,17 @@ public class Autocomplete {
         pq.add(tNode);
         while (!pq.isEmpty()) {
             tNode = pq.poll();
-            if (wordsets.isFull() && wordsets.isLighter(tNode)) {
-                break;
-            }
             if (tNode.isWord()) {
                 wordsets.add(tNode);
+                if (wordsets.isFull() && wordsets.isLighter(tNode)) {
+                    System.out.println("stuff in pq");
+                    for (int i =0; i<20; i++) {
+                        System.out.print("" + pq.poll());
+                    }
+                    System.out.println("tNode " + tNode);
+                    System.out.println(wordsets);
+                    break;
+                }
             }
             for (TrieNodeAuto n: tNode.getMap().values()) {
                 pq.add(n);

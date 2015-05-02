@@ -49,7 +49,7 @@ public class TrieNode {
         return isWord;
     }
 
-    public TrieNode findWord(String s) {
+    /*public TrieNode findWord(String s) {
         if (s == null || s.isEmpty()) {
             return null;
         }
@@ -59,7 +59,7 @@ public class TrieNode {
             return next;
         }
         return next.findWord(s.substring(1));
-    }
+    }*/
 
 
 

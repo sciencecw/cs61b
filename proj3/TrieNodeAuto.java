@@ -10,7 +10,8 @@ public class TrieNodeAuto {
 
     public TrieNodeAuto(char c) {
         map = new HashMap<Character, TrieNodeAuto>();
-        weight = Double.NEGATIVE_INFINITY;
+        weight = -1;
+        maxweight = -1;
         isWord = false;
         character = c;
     }
@@ -18,6 +19,7 @@ public class TrieNodeAuto {
     public TrieNodeAuto(char c, String s, double wg) {
         this(c);
         setWord(s, wg);
+        maxweight = wg;
     }
 
     public void setWord(String s, double wg) {
@@ -28,11 +30,11 @@ public class TrieNodeAuto {
 
     @Override
     public String toString() {
-        String s = character + "";
+        String s = character + " " + maxweight + " " + weight;
         if (word != null) {
-            s = s + " " + weight+ " " + word;
+            s = s + " " + word + "\n";
         } else {
-            s = s + " " + maxweight;
+            s = s + " \n";
         }
         return s;
     }
@@ -45,14 +47,6 @@ public class TrieNodeAuto {
         return character;
     }
 
-    public HashMap<Character, TrieNodeAuto> getMap() {
-        return map;
-    }
-
-    public void setmaxWeight(double w) {
-        maxweight = w;
-    }
-
     public double getWeight() {
         return weight;
     }
@@ -60,6 +54,11 @@ public class TrieNodeAuto {
     public double getmaxWeight() {
         return maxweight;
     }
+
+    public HashMap<Character, TrieNodeAuto> getMap() {
+        return map;
+    }
+
 
     public TrieNodeAuto getNode(char c) {
         return map.get(c);
@@ -69,12 +68,15 @@ public class TrieNodeAuto {
         return map.containsKey(c);
     }
 
+    // set up next node
     public TrieNodeAuto setNode(char c, boolean isW, String s, double wg) {
-        TrieNodeAuto temp = new TrieNodeAuto(c);
+        TrieNodeAuto temp;
         if (isW) {
-            temp.setWord(s, wg);
+            temp = new TrieNodeAuto(c, s, wg);
+        } else {
+            temp = new TrieNodeAuto(c);
+            temp.updateMaxweight(wg);
         }
-        temp.setmaxWeight(wg);
         map.put(c, temp);
         return temp;
     }
@@ -106,17 +108,24 @@ public class TrieNodeAuto {
         return isWord;
     }
 
-    public TrieNodeAuto findWord(String s) {
-        if (s == null || s.isEmpty()) {
+    /*public TrieNodeAuto findWord(String s) {
+        if (s == null) {
             return this;
         }
-        char c = s.charAt(0);
+        return findWordhelper(s, 0);
+    }
+
+    public TrieNodeAuto findWordhelper(String s, int index) {
+        if (s == null || s.isEmpty() || s.) {
+            return this;
+        }
+        char c = s.charAt(index);
         TrieNodeAuto next = this.getNode(c);
-        if (next == null || s.length() == 1) {
+        if (next == null || s.length() == (index + 1)) {
             return next;
         }
-        return next.findWord(s.substring(1));
-    }
+        return findWordhelper(s, index + 1);
+    }*/
 
 
 

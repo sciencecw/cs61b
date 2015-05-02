@@ -26,7 +26,7 @@ public class Trie {
      */
     public boolean find(String s, boolean isFullWord) {
         checkstring(s);
-        TrieNode tr = root.findWord(s);
+        TrieNode tr = prefixNode(s);
         if (tr == null) {
             return false;
         } else if (!isFullWord) {
@@ -91,6 +91,20 @@ public class Trie {
             }
         }
         return sb.toString();
+    }
+
+    public TrieNode prefixNode(String s) {
+        if (s == null || s.isEmpty()) {
+            return root;
+        }
+        int index = 0;
+        TrieNode pointer = root;
+        while (index < s.length() && pointer != null) {
+            char c = s.charAt(index);
+            pointer = pointer.getNode(c);
+            index++;
+        }
+        return pointer;
     }
 
     /**

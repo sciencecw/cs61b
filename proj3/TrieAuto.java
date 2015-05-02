@@ -23,7 +23,7 @@ public class TrieAuto {
      */
     public boolean find(String s, boolean isFullWord) {
         checkstring(s);
-        TrieNodeAuto tr = root.findWord(s);
+        TrieNodeAuto tr = prefixNode(s);
         if (tr == null) {
             return false;
         } else if (!isFullWord) {
@@ -43,7 +43,7 @@ public class TrieAuto {
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             boolean isLast = (i == (s.length() - 1));
-            if (pointer.hasNode(c)) {
+            if (pointer.hasNode(c)) { // if the node already exist
                 pointer = pointer.getNode(c);
                 // update weight
                 pointer.updateMaxweight(weight);
@@ -51,7 +51,7 @@ public class TrieAuto {
                 if (isLast) {
                     pointer.setWord(s, weight);
                 }
-            } else {
+            } else { // no such node yet -> create one
                 pointer = pointer.setNode(c, isLast, s, weight);
             }
             //System.out.println(c + " " + pointer.getmaxWeight() + "");
@@ -63,8 +63,25 @@ public class TrieAuto {
      * @param s input string
      * @return representing the prefix
      */
+    /*public TrieNodeAuto prefixNode(String s) {
+        if (s == null) {
+            return root;
+        }
+        return root.findWordhelper(s, 0);
+    }*/
+
     public TrieNodeAuto prefixNode(String s) {
-        return root.findWord(s);
+        if (s == null || s.isEmpty()) {
+            return root;
+        }
+        int index = 0;
+        TrieNodeAuto pointer = root;
+        while (index < s.length() && pointer != null) {
+            char c = s.charAt(index);
+            pointer = pointer.getNode(c);
+            index++;
+        }
+        return pointer;
     }
 
     /**
