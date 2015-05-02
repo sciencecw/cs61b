@@ -77,6 +77,10 @@ public class TrieAuto {
         }
     }
 
+    public TrieNodeAuto getRootnode() {
+        return root;
+    }
+
     /**
      * main method
      * @param args redundant

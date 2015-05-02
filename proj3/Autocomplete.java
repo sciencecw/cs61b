@@ -19,7 +19,7 @@ public class Autocomplete {
             throw new IllegalArgumentException();
         }
         for (int i = 0; i < terms.length; i++) {
-            if (weights[i] < 0 || trie.find(term[i], true)) {
+            if (weights[i] < 0 || trie.find(terms[i], true)) {
                 throw new IllegalArgumentException();
             }
             trie.insert(terms[i], weights[i]);
@@ -110,7 +110,7 @@ public class Autocomplete {
                 pq.add(n);
             }
         }
-        System.out.println(wordsets);
+        //System.out.println(wordsets);
         return wordsets.getIterable();
     }
 

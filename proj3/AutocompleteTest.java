@@ -49,7 +49,7 @@ public class AutocompleteTest {
 	@Test
 	public void testBasic() {
 
-		TrieNodeAuto tNode = trie.root;
+		TrieNodeAuto tNode = trie.getRootnode();
 
         while (tNode.hasSubnode()) {
             TrieNodeAuto ttemp = tNode.getmaxNode();
