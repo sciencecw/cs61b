@@ -3,6 +3,7 @@ import java.util.LinkedList;
 
 /**
  * Implements autocomplete on prefixes for a given dictionary of terms and weights.
+ * @author Kak Wong
  */
 public class Autocomplete {
 
@@ -25,14 +26,18 @@ public class Autocomplete {
         }
     }
   
+    /**
+     * alternate constructor of class with trie provided
+     * @param tr Trie used for construction
+     */  
     public Autocomplete(TrieAuto tr) {
         trie = tr;
     }
 
     /**
      * Find the weight of a given term. If it is not in the dictionary, return 0.0
-     * @param term
-     * @return
+     * @param term string in interest 
+     * @return double weight
      */
     public double weightOf(String term) {
         TrieNodeAuto tNode = trie.prefixNode(term);
@@ -61,6 +66,10 @@ public class Autocomplete {
         return tNode.getWord();
     }
 
+    /**
+     * helper method. check if string is suitable for input
+     * @param s input string
+     */
     private void checkString(String s) {
         if (s == null) {
             throw new NullPointerException();
@@ -70,9 +79,9 @@ public class Autocomplete {
     /**
      * Returns the top k matching terms (in descending order of weight) as an iterable.
      * If there are less than k matches, return all the matching terms.
-     * @param prefix
-     * @param k
-     * @return
+     * @param prefix with which the matches must start with
+     * @param k number of matches provided
+     * @return an interable for the function
      */
     public Iterable<String> topMatches(String prefix, int k) {
         checkString(prefix);
@@ -120,7 +129,8 @@ public class Autocomplete {
     }
     /**
      * Test client. Reads the data from the file, 
-     * then repeatedly reads autocomplete queries from standard input and prints out the top k matching terms.
+     * then repeatedly reads autocomplete queries from standard 
+     * input and prints out the top k matching terms.
      * @param args takes the name of an input file and an integer k as command-line arguments
      */
     public static void main(String[] args) {
@@ -141,8 +151,9 @@ public class Autocomplete {
         int k = Integer.parseInt(args[1]);
         while (StdIn.hasNextLine()) {
             String prefix = StdIn.readLine();
-            for (String term : autocomplete.topMatches(prefix, k))
-                StdOut.printf("%14.1f  %s\n", autocomplete.weightOf(term), term);
+            for (String term : autocomplete.topMatches(prefix, k)) {
+                StdOut.printf("%14.1f  %s\n", autocomplete.weightOf(term), term);                
+            }
         }
     }
 

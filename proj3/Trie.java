@@ -9,12 +9,21 @@ import java.util.ArrayDeque;
  */
 
 public class Trie {
-    public TrieNode root;
+    private TrieNode root;
 
+    /**
+     * Initializes Trie
+     */
     public Trie() {
         root = new TrieNode((char) 0); // sentinel node
     }
 
+    /**
+     * find if string is added to trie
+     * @param s input string
+     * @param isFullWord if only prefix or fullword is searched for
+     * @return true if such word is found
+     */
     public boolean find(String s, boolean isFullWord) {
         checkstring(s);
         TrieNode tr = root.findWord(s);
@@ -26,6 +35,10 @@ public class Trie {
         return tr.isWord();
     }
 
+    /**
+     * insert string to trie
+     * @param s input string
+     */
     public void insert(String s) {
         checkstring(s);
         TrieNode pointer = root;
@@ -44,12 +57,21 @@ public class Trie {
         } 
     }
 
+    /**
+     * helper method. check if string is suitable for input
+     * @param s input string
+     */
     private void checkstring(String s) {
         if (s == null || s.isEmpty()) {
             throw new IllegalArgumentException();
         }
     }
 
+    /**
+     * helper method. graph traversal with charset as alphabet ordering
+     * @param charset input character ordering
+     * @return string representation of dfs graph traversal
+     */
     public String dfs(char[] charset) {
         ArrayDeque<TrieNode> stack = new ArrayDeque<TrieNode>();
         StringBuilder sb = new StringBuilder();
@@ -60,7 +82,7 @@ public class Trie {
                 sb.append(n.getWord()).append("\n");
             }
             if (n.map.size() != 0) {
-                for (int i = charset.length -  1 ; i >= 0 ; i--) {
+                for (int i = charset.length -  1; i >= 0; i--) {
                     char c = charset[i];
                     if (n.hasNode(c)) {
                         stack.push(n.getNode(c));
@@ -71,6 +93,10 @@ public class Trie {
         return sb.toString();
     }
 
+    /**
+     * main method
+     * @param args redundant
+     */
     public static void main(String[] args) {
         Trie t = new Trie();
         t.insert("hello");

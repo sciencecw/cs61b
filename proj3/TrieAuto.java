@@ -1,6 +1,3 @@
-
-import java.util.ArrayDeque;
-
 /**
  * Prefix-TrieAuto. Supports linear time find() and insert(). 
  * Should support determining whether a word is a full word in the 
@@ -9,12 +6,21 @@ import java.util.ArrayDeque;
  */
 
 public class TrieAuto {
-    public TrieNodeAuto root;
+    private TrieNodeAuto root;
 
+    /**
+     * Initializes Trie
+     */
     public TrieAuto() {
         root = new TrieNodeAuto('a'); // sentinel node
     }
 
+    /**
+     * find if string is added to trie
+     * @param s input string
+     * @param isFullWord if only prefix or fullword is searched for
+     * @return true if such word is found
+     */
     public boolean find(String s, boolean isFullWord) {
         checkstring(s);
         TrieNodeAuto tr = root.findWord(s);
@@ -26,6 +32,11 @@ public class TrieAuto {
         return tr.isWord();
     }
 
+    /**
+     * insert string to trie
+     * @param s input string
+     * @param weight for weight associated with this word
+     */
     public void insert(String s, double weight) {
         checkstring(s);
         TrieNodeAuto pointer = root;
@@ -47,17 +58,29 @@ public class TrieAuto {
         } 
     }
 
+    /**
+     * helper method. return prefix trienode
+     * @param s input string
+     * @return representing the prefix
+     */
     public TrieNodeAuto prefixNode(String s) {
         return root.findWord(s);
     }
 
+    /**
+     * helper method. check if string is suitable for input
+     * @param s input string
+     */
     private void checkstring(String s) {
         if (s == null || s.isEmpty()) {
             throw new IllegalArgumentException();
         }
     }
 
-
+    /**
+     * main method
+     * @param args redundant
+     */
     public static void main(String[] args) {
 /*        TrieAuto t = new TrieAuto();
         t.insert("hello");
