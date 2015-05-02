@@ -82,10 +82,11 @@ public class Autocomplete {
         }      
         PriorityQueue<TrieNodeAuto> pq 
             = new PriorityQueue<TrieNodeAuto>(k, new AutoComparator(true));
-        PriorityQueue<TrieNodeAuto> wordsets
-            = new PriorityQueue<TrieNodeAuto>(k, new AutoComparator(false));
+        /*PriorityQueue<TrieNodeAuto> wordsets
+            = new PriorityQueue<TrieNodeAuto>(k, new AutoComparator(false)); */
+        WordList wordsets = new WordList(k);
         pq.add(tNode);
-        while (!pq.isEmpty() && wordsets.size() < k) {
+        while (!pq.isEmpty() && !wordsets.isLighter(tNode)) {
             tNode = pq.poll();
             if (tNode.isWord()) {
                 wordsets.add(tNode);
@@ -94,16 +95,8 @@ public class Autocomplete {
                 pq.add(n);
             }
         }
-        LinkedList<String> words = new LinkedList<String>();
-        /*for (Integer n: wordsets) {
-            //System.out.println(n.getWord());
-            System.out.println(n);
-            //words.add(n.getWord());
-        }*/
-        while (!wordsets.isEmpty()) {
-            words.add(wordsets.poll().getWord());
-        }
-        return words;
+
+        return wordsets.getIterable();
     }
 
     /**
@@ -146,4 +139,7 @@ public class Autocomplete {
                 StdOut.printf("%14.1f  %s\n", autocomplete.weightOf(term), term);
         }
     }
+
+
+
 }

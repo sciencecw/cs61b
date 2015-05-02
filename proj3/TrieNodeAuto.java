@@ -15,6 +15,11 @@ public class TrieNodeAuto {
         character = c;
     }
 
+    public TrieNodeAuto(char c, String s, double wg) {
+        this(c);
+        setWord(s, wg);
+    }
+
     public void setWord(String s, double wg) {
         isWord = true;
         word = s;
@@ -23,9 +28,11 @@ public class TrieNodeAuto {
 
     @Override
     public String toString() {
-        String s = character + " " + maxweight;
+        String s = character + "";
         if (word != null) {
-            s = s + " " + word;
+            s = s + " " + weight+ " " + word;
+        } else {
+            s = s + " " + maxweight;
         }
         return s;
     }

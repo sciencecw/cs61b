@@ -80,6 +80,16 @@ public class AutocompleteTest {
 		}
 
 	}
+
+	@Test
+	public void testWordList() {
+		Autocomplete acp = new Autocomplete(trie);
+		Iterable<String> it = acp.topMatches("Kand",  3);
+		for (String s: it) {
+			System.out.println(s);
+		}
+
+	}
 	
 
 	/** Runs tests. */
