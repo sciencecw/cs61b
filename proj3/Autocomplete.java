@@ -94,8 +94,6 @@ public class Autocomplete {
         }      
         PriorityQueue<TrieNodeAuto> pq 
             = new PriorityQueue<TrieNodeAuto>(k, new AutoComparator(true));
-        /*PriorityQueue<TrieNodeAuto> wordsets
-            = new PriorityQueue<TrieNodeAuto>(k, new AutoComparator(false)); */
         WordList wordsets = new WordList(k);
         pq.add(tNode);
         while (!pq.isEmpty()) {
@@ -103,12 +101,13 @@ public class Autocomplete {
             if (tNode.isWord()) {
                 wordsets.add(tNode);
                 if (wordsets.isFull() && wordsets.isLighter(tNode)) {
-                    System.out.println("stuff in pq");
-                    for (int i =0; i<20; i++) {
-                        System.out.print("" + pq.poll());
-                    }
-                    System.out.println("tNode " + tNode);
-                    System.out.println(wordsets);
+                    /*System.out.println("stuff in pq");
+                     *for (int i =0; i<20; i++) {
+                     *    System.out.print("" + pq.poll());
+                     *}
+                     *System.out.println("tNode " + tNode);
+                     *System.out.println(wordsets);
+                     */
                     break;
                 }
             }

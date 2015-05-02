@@ -16,10 +16,8 @@ public class AutoComparator implements Comparator<TrieNodeAuto> {
         double diff = 0;
         if (isMaxweight) {
             diff = c2.getmaxWeight() - c1.getmaxWeight();           
-            //System.out.println("max " + c2.getmaxWeight() + " " + c1.getmaxWeight() + " " + (int) diff);
         } else {
             diff = c2.getWeight() - c1.getWeight();
-            //System.out.println(c2.getWeight() + " " + c1.getWeight() + " " + diff);
         }
         if (diff == 0) {
             diff = c2.getChar() - c1.getChar();
