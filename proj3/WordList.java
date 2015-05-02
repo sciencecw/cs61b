@@ -30,12 +30,15 @@ public class WordList {
         Arrays.sort(nodearray, ac);
     }
 
+    public boolean isFull() {
+        return (size == nodearray.length);
+    }
+
     public boolean isLighter(TrieNodeAuto n) {
         if (size == 0) {
             return true;
         }
         TrieNodeAuto lastItem = nodearray[size - 1]; // prev item
-        System.out.println(lastItem + " " + n);
         return (ac.compare(lastItem, n) < 0);
     }
 
@@ -47,23 +50,29 @@ public class WordList {
         return itlist;
     }
 
+    @Override
+    public String toString() {
+        return Arrays.toString(nodearray);
+    }
+
     public static void main(String[] args) {
         WordList wl = new WordList(5);
         wl.add(new TrieNodeAuto('c', "chic", 100.0));
         wl.add(new TrieNodeAuto('d', "sdfd", 120.3));
         wl.add(new TrieNodeAuto('a', "sdfa", 103.0));
         wl.add(new TrieNodeAuto('p', "casdgp", 1000.4));
-        System.out.println(Arrays.toString(wl.nodearray));
+        System.out.println(wl);
 
         TrieNodeAuto temp = new TrieNodeAuto('d', "fds", 90.4);
         System.out.println(wl.isLighter(temp));
 
         wl.add(temp);
-        System.out.println(Arrays.toString(wl.nodearray));
+        System.out.println(wl);
 
         temp = new TrieNodeAuto('d', "fds", 201.8);
         wl.add(temp);
-        System.out.println(Arrays.toString(wl.nodearray));
+        System.out.println(wl);
+        System.out.println(wl.isLighter(new TrieNodeAuto('d', "f", 100.4)));
 
     }
 }

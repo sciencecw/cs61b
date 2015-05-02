@@ -18,6 +18,9 @@ public class Autocomplete {
             throw new IllegalArgumentException();
         }
         for (int i = 0; i < terms.length; i++) {
+            if (weights[i] < 0 || trie.find(term[i], true)) {
+                throw new IllegalArgumentException();
+            }
             trie.insert(terms[i], weights[i]);
         }
     }
@@ -86,8 +89,11 @@ public class Autocomplete {
             = new PriorityQueue<TrieNodeAuto>(k, new AutoComparator(false)); */
         WordList wordsets = new WordList(k);
         pq.add(tNode);
-        while (!pq.isEmpty() && !wordsets.isLighter(tNode)) {
+        while (!pq.isEmpty()) {
             tNode = pq.poll();
+            if (wordsets.isFull() && wordsets.isLighter(tNode)) {
+                break;
+            }
             if (tNode.isWord()) {
                 wordsets.add(tNode);
             }
@@ -95,7 +101,7 @@ public class Autocomplete {
                 pq.add(n);
             }
         }
-
+        System.out.println(wordsets);
         return wordsets.getIterable();
     }
 
