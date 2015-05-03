@@ -63,7 +63,7 @@ public class Autocomplete {
         TrieNodeAuto tNode = trie.prefixNode(prefix);
         while (tNode.hasSubnode()) {
             TrieNodeAuto ttemp = tNode.getmaxNode();
-            if (ttemp.getmaxWeight() >= tNode.getmaxWeight()) {
+            if (!tNode.isWord() || ttemp.getmaxWeight() >= tNode.getmaxWeight()) {
                 tNode = ttemp;
             } else {
                 break;

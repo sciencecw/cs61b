@@ -89,7 +89,7 @@ public class TrieNodeAuto {
     }
 
     public TrieNodeAuto getmaxNode() {
-        double maxweight = Double.NEGATIVE_INFINITY;
+        double maxweight = -1.1;
         TrieNodeAuto maxnode = null;
         for (TrieNodeAuto tNode :map.values()) {
             double w = tNode.getmaxWeight();

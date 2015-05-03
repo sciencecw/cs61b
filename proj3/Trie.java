@@ -1,4 +1,3 @@
-
 import java.util.ArrayDeque;
 
 /**
@@ -12,7 +11,8 @@ public class Trie {
     private TrieNode root;
 
     /**
-     * Initializes Trie
+     * Constructor: Initializes Trie
+     * constant time
      */
     public Trie() {
         root = new TrieNode((char) 0); // sentinel node
@@ -37,6 +37,7 @@ public class Trie {
 
     /**
      * insert string to trie
+     * runtime scales with length of string
      * @param s input string
      */
     public void insert(String s) {
@@ -69,6 +70,7 @@ public class Trie {
 
     /**
      * helper method. graph traversal with charset as alphabet ordering
+     * runtime scales with size of trie
      * @param charset input character ordering
      * @return string representation of dfs graph traversal
      */
@@ -93,6 +95,12 @@ public class Trie {
         return sb.toString();
     }
 
+    /**
+     * return node associated with certain prefix
+     * runtime scales with legnth of string s
+     * @param s prefix string
+     * @return Node associated with prefix
+     */
     public TrieNode prefixNode(String s) {
         if (s == null || s.isEmpty()) {
             return root;
@@ -111,16 +119,6 @@ public class Trie {
      * main method
      * @param args redundant
      */
-    public static void main(String[] args) {
-        Trie t = new Trie();
-        t.insert("hello");
-        t.insert("hey");
-        t.insert("goodbye");
-        System.out.println(t.find("hell", false));
-        System.out.println(t.find("hello", true));
-        System.out.println(t.find("good", false));
-        System.out.println(t.find("bye", false));
-        System.out.println(t.find("heyy", false));
-        System.out.println(t.find("hell", true));   
+    public static void main(String[] args) { 
     }
 }
