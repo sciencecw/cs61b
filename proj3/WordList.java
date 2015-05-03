@@ -1,11 +1,14 @@
 import java.util.Arrays;
 import java.util.LinkedList;
 
+
+
 public class WordList {
     private TrieNodeAuto[] nodearray;
     private AutoComparator ac;
     private int size = 0;
     // also indicate where next item is inserted
+
 
     public WordList(int k) {
         nodearray = new TrieNodeAuto[k];
@@ -39,7 +42,7 @@ public class WordList {
             return true;
         }
         TrieNodeAuto lastItem = nodearray[size - 1]; // prev item
-        return (ac.compare(lastItem, n) < 0);
+        return (lastItem.getWeight() > n.getmaxWeight());
     }
 
     public Iterable<String> getIterable() {
@@ -56,23 +59,5 @@ public class WordList {
     }
 
     public static void main(String[] args) {
-        WordList wl = new WordList(5);
-        wl.add(new TrieNodeAuto('c', "chic", 100.0));
-        wl.add(new TrieNodeAuto('d', "sdfd", 120.3));
-        wl.add(new TrieNodeAuto('a', "sdfa", 103.0));
-        wl.add(new TrieNodeAuto('p', "casdgp", 1000.4));
-        System.out.println(wl);
-
-        TrieNodeAuto temp = new TrieNodeAuto('d', "fds", 90.4);
-        System.out.println(wl.isLighter(temp));
-
-        wl.add(temp);
-        System.out.println(wl);
-
-        temp = new TrieNodeAuto('d', "fds", 201.8);
-        wl.add(temp);
-        System.out.println(wl);
-        System.out.println(wl.isLighter(new TrieNodeAuto('d', "f", 100.4)));
-
     }
 }

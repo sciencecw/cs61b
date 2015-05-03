@@ -10,6 +10,8 @@ public class Autocomplete {
     private TrieAuto trie;
     /**
      * Initializes required data structures from parallel arrays.
+     * This should run in linear time with respect to array length
+     * and linear with resepct to word length
      * @param terms Array of terms.
      * @param weights Array of weights.
      */
@@ -19,19 +21,23 @@ public class Autocomplete {
             throw new IllegalArgumentException();
         }
         for (int i = 0; i < terms.length; i++) {
-            if (weights[i] < 0 || trie.find(terms[i], true)) {
+            if (weights[i] < 0) {
                 throw new IllegalArgumentException();
             }
             trie.insert(terms[i], weights[i]);
         }
     }
-  
+
     /**
      * alternate constructor of class with trie provided
      * @param tr Trie used for construction
      */  
     public Autocomplete(TrieAuto tr) {
         trie = tr;
+    }
+
+    public TrieAuto getTrie() {
+        return trie;
     }
 
     /**
@@ -102,12 +108,12 @@ public class Autocomplete {
                 wordsets.add(tNode);
                 if (wordsets.isFull() && wordsets.isLighter(tNode)) {
                     /*System.out.println("stuff in pq");
-                     *for (int i =0; i<20; i++) {
-                     *    System.out.print("" + pq.poll());
-                     *}
-                     *System.out.println("tNode " + tNode);
-                     *System.out.println(wordsets);
-                     */
+                    for (int i =0; i<20; i++) {
+                        System.out.print("" + pq.poll());
+                    }
+                    System.out.println("tNode " + tNode);
+                    System.out.println(wordsets);
+                    */
                     break;
                 }
             }
@@ -115,7 +121,6 @@ public class Autocomplete {
                 pq.add(n);
             }
         }
-        //System.out.println(wordsets);
         return wordsets.getIterable();
     }
 

@@ -3,7 +3,6 @@ import java.util.HashMap;
 public class TrieNodeAuto {
     private char character;
     private String word;
-    private boolean isWord;
     private HashMap<Character, TrieNodeAuto> map;
     private double weight;
     private double maxweight;
@@ -12,7 +11,6 @@ public class TrieNodeAuto {
         map = new HashMap<Character, TrieNodeAuto>();
         weight = -1;
         maxweight = -1;
-        isWord = false;
         character = c;
     }
 
@@ -23,7 +21,6 @@ public class TrieNodeAuto {
     }
 
     public void setWord(String s, double wg) {
-        isWord = true;
         word = s;
         weight = wg;
     }
@@ -105,27 +102,8 @@ public class TrieNodeAuto {
     }
 
     public boolean isWord() {
-        return isWord;
+        return (weight >= 0);
     }
-
-    /*public TrieNodeAuto findWord(String s) {
-        if (s == null) {
-            return this;
-        }
-        return findWordhelper(s, 0);
-    }
-
-    public TrieNodeAuto findWordhelper(String s, int index) {
-        if (s == null || s.isEmpty() || s.) {
-            return this;
-        }
-        char c = s.charAt(index);
-        TrieNodeAuto next = this.getNode(c);
-        if (next == null || s.length() == (index + 1)) {
-            return next;
-        }
-        return findWordhelper(s, index + 1);
-    }*/
 
 
 

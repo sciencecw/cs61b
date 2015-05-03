@@ -49,12 +49,14 @@ public class TrieAuto {
                 pointer.updateMaxweight(weight);
                 // turn node to be true if it is last node
                 if (isLast) {
+                    if (pointer.isWord()) {
+                        throw new IllegalArgumentException();
+                    }
                     pointer.setWord(s, weight);
                 }
             } else { // no such node yet -> create one
                 pointer = pointer.setNode(c, isLast, s, weight);
             }
-            //System.out.println(c + " " + pointer.getmaxWeight() + "");
         } 
     }
 
@@ -63,13 +65,6 @@ public class TrieAuto {
      * @param s input string
      * @return representing the prefix
      */
-    /*public TrieNodeAuto prefixNode(String s) {
-        if (s == null) {
-            return root;
-        }
-        return root.findWordhelper(s, 0);
-    }*/
-
     public TrieNodeAuto prefixNode(String s) {
         if (s == null || s.isEmpty()) {
             return root;
@@ -98,22 +93,4 @@ public class TrieAuto {
         return root;
     }
 
-    /**
-     * main method
-     * @param args redundant
-     */
-    public static void main(String[] args) {
-/*        TrieAuto t = new TrieAuto();
-        t.insert("hello");
-        t.insert("hey");
-        t.insert("goodbye");
-        System.out.println(t.find("hell", false));
-        System.out.println(t.find("hello", true));
-        System.out.println(t.find("good", false));
-        System.out.println(t.find("bye", false));
-        System.out.println(t.find("heyy", false));
-        System.out.println(t.find("hell", true));   
- */
-
-    }
 }
