@@ -36,6 +36,10 @@ public class Autocomplete {
         trie = tr;
     }
 
+    /**
+     *  get trie method
+     * @return returns the word trie 
+     */  
     public TrieAuto getTrie() {
         return trie;
     }
