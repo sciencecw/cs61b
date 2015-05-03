@@ -117,8 +117,10 @@ public class Autocomplete {
                     break;
                 }
             }
-            for (TrieNodeAuto n: tNode.getMap().values()) {
-                pq.add(n);
+            if (tNode.hasSubnode()) {
+                for (TrieNodeAuto n: tNode.getMap().values()) {
+                    pq.add(n);
+                }
             }
         }
         return wordsets.getIterable();

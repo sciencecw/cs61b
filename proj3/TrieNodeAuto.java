@@ -8,14 +8,15 @@ public class TrieNodeAuto {
     private double maxweight;
 
     public TrieNodeAuto(char c) {
-        map = new HashMap<Character, TrieNodeAuto>();
+        //map = new HashMap<Character, TrieNodeAuto>();
         weight = -1;
         maxweight = -1;
         character = c;
     }
 
     public TrieNodeAuto(char c, String s, double wg) {
-        this(c);
+        //map = new HashMap<Character, TrieNodeAuto>();
+        character = c;
         setWord(s, wg);
         maxweight = wg;
     }
@@ -62,7 +63,11 @@ public class TrieNodeAuto {
     }
 
     public boolean hasNode(char c) {
-        return map.containsKey(c);
+        return (map != null && map.containsKey(c));
+    }
+
+    public boolean hasnoMap() {
+        return (map == null);
     }
 
     // set up next node
@@ -72,7 +77,10 @@ public class TrieNodeAuto {
             temp = new TrieNodeAuto(c, s, wg);
         } else {
             temp = new TrieNodeAuto(c);
-            temp.updateMaxweight(wg);
+            temp.maxweight = wg;
+        }
+        if (map == null) {
+            map = new HashMap<Character, TrieNodeAuto>();
         }
         map.put(c, temp);
         return temp;
@@ -85,7 +93,7 @@ public class TrieNodeAuto {
     }
 
     public boolean hasSubnode() {
-        return !map.isEmpty();
+        return (map != null && !map.isEmpty());
     }
 
     public TrieNodeAuto getmaxNode() {

@@ -40,10 +40,11 @@ public class TrieAuto {
     public void insert(String s, double weight) {
         checkstring(s);
         TrieNodeAuto pointer = root;
+        boolean hassubNode = true;
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             boolean isLast = (i == (s.length() - 1));
-            if (pointer.hasNode(c)) { // if the node already exist
+            if (hassubNode && pointer.hasNode(c)) { // if the node already exist
                 pointer = pointer.getNode(c);
                 // update weight
                 pointer.updateMaxweight(weight);
@@ -56,6 +57,7 @@ public class TrieAuto {
                 }
             } else { // no such node yet -> create one
                 pointer = pointer.setNode(c, isLast, s, weight);
+                hassubNode = false;
             }
         } 
     }
@@ -72,6 +74,9 @@ public class TrieAuto {
         int index = 0;
         TrieNodeAuto pointer = root;
         while (index < s.length() && pointer != null) {
+            if (pointer.hasnoMap()) {
+                return null;
+            }
             char c = s.charAt(index);
             pointer = pointer.getNode(c);
             index++;
